@@ -1,15 +1,17 @@
 import requests
-import json
 from datetime import datetime
 import time
 import math
 
-PORTSTAT_URL = "http://130.194.73.219:8181/onos/v1/statistics/ports"
-PORT_URL = "http://130.194.73.219:8181/onos/v1/devices/"
-FLOWSSTAT_URL = "http://127.0.0.1:8181/onos/v1/statistics/flows/link"
+from monitoringTools import *
+
+PORTSTAT_URL = CONTROLLER_URL + "/statistics/ports"
+PORT_URL = CONTROLLER_URL + "/devices/"
+
 auth = ("onos", "rocks")
 CHAIN_NAME = "networkId"
 interval = 0.3
+k = 4 # Switch degree
 EDGE_DEVICES = ["of:0000000000000bb9",
                 "of:0000000000000bba",
                 "of:0000000000000bbb",
@@ -31,9 +33,7 @@ CORE_DEVICES = ["of:00000000000003e9",
                 "of:00000000000003eb",
                 "of:00000000000003ec"]
 
-def getJsonData(url):
-    r = requests.get(url, auth=auth)
-    return r.json()
+
 
 def getPortStat(url):
     portStat = getJsonData(url)
@@ -51,7 +51,7 @@ def getPortStat(url):
 def getFlowStat(r):
     # r : link rate paraneter (to set the desired average link utilisation)
 
-    k = 4 # Switch degree
+    
     listLAgg_down_p = [] # Number of down links required to suport the down-traffic (where the pod number p is the list index)
     listLAgg_up_p = [] # Number of down links required to suport the up-traffic (where the pod number p is the list index)
     NAgg_p = [] # Minimum number of active aggregation switches reauired to support traffic (where the pod number p is the list index)
@@ -59,11 +59,8 @@ def getFlowStat(r):
     for p in range(0,4): # For each pod
         listLEdge_up_p_e = [] # Number of links for edge swicth e in pod p (where 2*p+e is the list index)
         for j in range(0,2): # For each edge switch in the pod p 
-            url1 = FLOWSSTAT_URL + "?device=" + EDGE_DEVICES[2*p+j] + "&port=1"
-            url2 = FLOWSSTAT_URL + "?device=" + EDGE_DEVICES[2*p+j] + "&port=2"
-
-            flowStat1 = getJsonData(url1)
-            flowStat2 = getJsonData(url2)
+            flowStat1 = getFlowStatFromDevice(EDGE_DEVICES[2*p+j], "1")
+            flowStat2 = getFlowStatFromDevice(EDGE_DEVICES[2*p+j], "2")
 
             rate1_up = flowStat1["loads"][0]["rate"] # rate between edge j and a1 of the pod p in the up direction
             rate2_up = flowStat2["loads"][0]["rate"] # rate between edge j and a2 of the pod p in the up direction
@@ -122,16 +119,7 @@ def getFlowStat(r):
 
     return [NCore, NAgg_p]
 
-def portNumber2Mac(halfurl, deviceId):
-    deviceId = deviceId.replace(":", "%3A")
-    url = halfurl + deviceId + "/ports"
-    mac = getJsonData(url)
 
-    mapping = {}
-    for port in mac["ports"]:
-	    mapping[port["port"]] = port["annotations"]["portMac"]
-    #print json.dumps(mapping)
-    return mapping
 
 
 def getportSpeed(url):
@@ -177,8 +165,10 @@ def send(url, chains, sliceInfo):
 
 
 if __name__ == "__main__":
-    getFlowStat(1)
-    #print(json.dumps(flowStat1, indent=4, sort_keys=True))
+    #getFlowStat(1)
+    r = postFlowRule("of:0000000000000bc0", "3", "4")
+    print(r)
+    #print(json.dumps(rule, indent=4, sort_keys=True))
     '''
     boolean flag = False
     delta = 0
