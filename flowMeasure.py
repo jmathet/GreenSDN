@@ -167,8 +167,9 @@ def send(url, chains, sliceInfo):
 if __name__ == "__main__":
     #getFlowStat(1)
     r = postFlowRule("of:0000000000000bc0", "3", "4")
+    r = deleteAllFlowRule("of:0000000000000bc0")
     print(r)
-    #print(json.dumps(rule, indent=4, sort_keys=True))
+    #print(json.dumps(r, indent=4, sort_keys=True))
     '''
     boolean flag = False
     delta = 0
