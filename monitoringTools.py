@@ -2,8 +2,12 @@ import requests
 import json
 
 CONTROLLER_URL = "http://127.0.0.1:8181/onos/v1"
+
 auth = ("onos", "rocks")
 headers = {'Content-Type':'application/json' , 'Accept':'application/json'}
+
+DEFAULT_ACCESS_CAPACITY = 5e8
+DEFAULT_CAPACITY = 5e8
 
 FLOWSSTAT_URL = CONTROLLER_URL + "/statistics/flows/link"
 FLOWS_URL = CONTROLLER_URL + "/flows" 
