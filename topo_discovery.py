@@ -3,14 +3,15 @@ import networkx as nx
 from monitoringTools import *
 import logging
 
-
 class TopoManager(object):
     def __init__(self):
         self.G = nx.Graph()
         self.pos = None
         self.hosts = []
         self.devices = []
-        self.deviceId_to_chassisId = {}
+        self.linkPorts = {} # Stores Link Ports - use : linkPorts[srcDeviceId::dstDeviceId] = srcPort::dstPort
+        self.hostLocation = {} # Stores Host Switch Ports
+        self.deviceId_to_chassisId = {} # id is 'of:00000000000000a1', chassisID is 'a1'
         self.retrieve_topo_from_ONOS()
 
     def retrieve_topo_from_ONOS(self):
@@ -19,7 +20,6 @@ class TopoManager(object):
         if 'devices' not in reply:
             return
         for dev in reply['devices']:
-            # id is 'of:00000000000000a1', chassisID is 'a1'
             self.deviceId_to_chassisId[dev['id']] = dev['chassisId']
             self.G.add_node(dev['id'], type='device')
             self.devices.append(dev['id'])
@@ -28,13 +28,20 @@ class TopoManager(object):
         if 'links' not in reply:
             return
         for link in reply['links']:
-            n1 = link['src']['device']
-            n2 = link['dst']['device']
+            srcDevice = link['src']['device']
+            srcPort = link['src']['port']
+            dstDevice = link['dst']['device']
+            dstPort = link['dst']['port']
+            #FIXME: Utility of this bandwith
             if 'annotations' in link and 'bandwidth' in link['annotations']:
                     bw = int(link['annotations']['bandwidth']) * 1e6
             else:
                 bw = DEFAULT_CAPACITY
-            self.G.add_edge(n1, n2, **{'bandwidth': bw})
+            self.G.add_edge(srcDevice, dstDevice, **{'bandwidth': bw})
+
+            srcToDst = srcDevice + b'::' + dstDevice #TODO: Comprendre pourquoi b est utile ici ?
+            self.linkPorts[srcToDst] = srcPort + b'::' + dstPort
+            # TODO: store the correspondance between src/dst and portIN/portOUT
 
         reply = getJsonData(CONTROLLER_URL + "/hosts")
         if 'hosts' not in reply:
@@ -43,8 +50,11 @@ class TopoManager(object):
             self.G.add_node(host['id'], type='host')
             for location in host['locations']:
                 self.G.add_edge(host['id'], location['elementId'],  **{'bandwidth': DEFAULT_ACCESS_CAPACITY})
+                ip = host['ipAddresses'][0]
+                switchId = location['elementId']
+                self.hostLocation[ip] = switchId + b'::' + location['port']
             self.hosts.append(host['id'])
-
+            
         self.pos = nx.fruchterman_reingold_layout(self.G)
 
     def draw_topo(self, block=True):
@@ -60,5 +70,14 @@ class TopoManager(object):
 if __name__ == "__main__":
     # Initialize Topo Manger and get the latest version of the topology
     topoManager = TopoManager()
-    topoManager.draw_topo()
+    
+    # Print some usefull information
+    print("\n Host location mapping\n")
+    print(json.dumps(topoManager.hostLocation))
+    print("\n Link port mapping\n")
+    print(json.dumps(topoManager.linkPorts))
+
+    # Draw the topology
+    #topoManager.draw_topo()
+
     print("end")
