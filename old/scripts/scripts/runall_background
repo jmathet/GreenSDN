@@ -1,0 +1,13 @@
+#!/bin/bash
+
+die() {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -eq 2 ] || die "Run a command on multiple hosts on background. Usage: $0 <host_list> 'command to run in multiple hosts'"
+
+for host in $(cat $1); do
+    ssh "$host" "$2" &
+    sleep 1
+done

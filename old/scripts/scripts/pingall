@@ -1,0 +1,12 @@
+#!/bin/bash
+
+die() {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -eq 1 ] || die "Ping to multiple hosts. Usage: $0 <host_list>"
+
+for ip in $(cat $1 | sed 's/.*@//g'); do
+    ping "$ip" -c 3
+done

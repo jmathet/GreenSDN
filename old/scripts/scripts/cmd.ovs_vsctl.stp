@@ -1,0 +1,1 @@
+'sudo ovs-vsctl set bridge ovsbr0 stp_enable=true'

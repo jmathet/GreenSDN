@@ -1,0 +1,10 @@
+#!/bin/bash
+
+die() {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -eq 2 ] || die "Run iperf3 servers on multiple hosts. Usage: $0 <host_list> <port>"
+
+./runall_iter $1 'sh -c "( (nohup iperf3 -s -p '$2' &> /dev/null) &)"'

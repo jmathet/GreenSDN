@@ -1,0 +1,15 @@
+#!/bin/bash
+
+die() {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -eq 2 ] || die "Copy a runnable file and run on multiple hosts background. Usage: $0 <host_list> <script_file_to_run>"
+
+for host in $(cat $1); do
+    scp "$2" "$host:./"
+    ssh "$host" "chmod +x ./$2"
+    ssh "$host" "nohup ./$2" &
+    sleep 1
+done

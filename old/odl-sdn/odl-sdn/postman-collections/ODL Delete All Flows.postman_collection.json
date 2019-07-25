@@ -1,0 +1,317 @@
+{
+	"variables": [],
+	"info": {
+		"name": "ODL Delete All Flows",
+		"_postman_id": "959d2f20-80bd-527c-24e3-7270ed07ab82",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Delete ALL flows via config",
+			"description": "",
+			"item": [
+				{
+					"name": "Delete flows via config 40960000",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960000/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flows via config 40960001",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960001/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flows via config 40960010",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960010/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flows via config 40960011",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960011/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flows via config 40960012",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960012/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flows via config 40960013",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960013/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flows via config 40960020",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960020/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flows via config 40960021",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960021/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flows via config 40960022",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960022/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flows via config 40960023",
+					"request": {
+						"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:40960023/table/0/",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

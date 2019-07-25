@@ -1,0 +1,553 @@
+{
+	"variables": [],
+	"info": {
+		"name": "ODL  OpenFlow",
+		"_postman_id": "fbb14db1-1898-d60f-b3fd-9cfb8bc53161",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET List all OpenFlow Nodes",
+			"request": {
+				"url": "{{oper}}/network-topology:network-topology/topology/flow:1",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET OpenFlow Node via OF Node ID",
+			"request": {
+				"url": "{{oper}}/network-topology:network-topology/topology/flow:1/node/openflow:{{openflow-node}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET OpenFlow Stats - Table 0",
+			"request": {
+				"url": "{{oper}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET OpenFlow Stats - Table 0 Flow 0",
+			"request": {
+				"url": "{{oper}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/0",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flows via config",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Delete flow via config",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/0",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get flows via config",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get flow via config",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/0",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add ARP 1",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/1",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<flow xmlns=\"urn:opendaylight:flow:inventory\">\n    <priority>2</priority>\n    <flow-name>arp2</flow-name>\n    <match>\n        <in-port>1</in-port>\n        <ethernet-match>\n            <ethernet-type>\n                <type>0x806</type>\n            </ethernet-type>\n        </ethernet-match>\n    </match>\n    <id>1</id>\n    <table_id>0</table_id>\n    <instructions>\n        <instruction>\n            <order>0</order>\n            <apply-actions>\n                <action>\n                   <order>0</order>\n                   <output-action>\n                       <output-node-connector>2</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n                <action>\n                   <order>1</order>\n                   <output-action>\n                       <output-node-connector>3</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n                <action>\n                   <order>2</order>\n                   <output-action>\n                       <output-node-connector>4</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n            </apply-actions>\n        </instruction>\n    </instructions>\n</flow>"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add ARP 2",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/1",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<flow xmlns=\"urn:opendaylight:flow:inventory\">\n    <priority>2</priority>\n    <flow-name>arp2</flow-name>\n    <match>\n        <in-port>2</in-port>\n        <ethernet-match>\n            <ethernet-type>\n                <type>0x806</type>\n            </ethernet-type>\n        </ethernet-match>\n    </match>\n    <id>1</id>\n    <table_id>0</table_id>\n    <instructions>\n        <instruction>\n            <order>0</order>\n            <apply-actions>\n                <action>\n                   <order>0</order>\n                   <output-action>\n                       <output-node-connector>1</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n                <action>\n                   <order>1</order>\n                   <output-action>\n                       <output-node-connector>3</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n                <action>\n                   <order>2</order>\n                   <output-action>\n                       <output-node-connector>4</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n            </apply-actions>\n        </instruction>\n    </instructions>\n</flow>"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add IP 1",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/2",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<flow xmlns=\"urn:opendaylight:flow:inventory\">\n    <priority>0</priority>\n    <flow-name>dscp-set</flow-name>\n    <match>\n        <in-port>7</in-port>\n        <ethernet-match>\n            <ethernet-type>\n                <type>0x800</type>\n            </ethernet-type>\n        </ethernet-match>\n    </match>\n    <id>2</id>\n    <table_id>0</table_id>\n    <instructions>\n        <instruction>\n            <order>0</order>\n            <apply-actions>\n                <action>\n                   <order>0</order>\n                   <output-action>\n                       <output-node-connector>2</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n            </apply-actions>\n        </instruction>\n    </instructions>\n</flow>"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add IP 2",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/3",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<flow xmlns=\"urn:opendaylight:flow:inventory\">\n    <priority>2</priority>\n    <flow-name>2to1icmp</flow-name>\n    <match>\n        <in-port>2</in-port>\n        <ethernet-match>\n            <ethernet-type>\n                <type>0x800</type>\n            </ethernet-type>\n        </ethernet-match>\n    </match>\n    <id>3</id>\n    <table_id>0</table_id>\n    <instructions>\n        <instruction>\n            <order>0</order>\n            <apply-actions>\n                <action>\n                   <order>0</order>\n                   <output-action>\n                       <output-node-connector>1</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n            </apply-actions>\n        </instruction>\n    </instructions>\n</flow>"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "MOD MAC",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/6",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<flow xmlns=\"urn:opendaylight:flow:inventory\">\n    <priority>2</priority>\n    <flow-name>modmac</flow-name>\n    <match>\n        <in-port>1</in-port>\n        <ethernet-match>\n            <ethernet-type>\n                <type>0x800</type>\n            </ethernet-type>\n        </ethernet-match>\n        <ipv4-destination>1.2.3.4/32</ipv4-destination>\n    </match>\n    <id>6</id>\n    <table_id>0</table_id>\n    <instructions>\n        <instruction>\n            <order>0</order>\n            <apply-actions>\n                <action>\n                   <order>0</order>\n                   <set-dl-dst-action>\n                        <address>11:22:33:44:55:66</address>\n                   </set-dl-dst-action>\n                </action>\n                <action>\n                   <order>1</order>\n                   <output-action>\n                        <output-node-connector>1</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n            </apply-actions>\n        </instruction>\n    </instructions>\n</flow>"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "MOD IP Next Hop",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/5",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<flow xmlns=\"urn:opendaylight:flow:inventory\">\n    <priority>2</priority>\n    <flow-name>modip</flow-name>\n    <match>\n        <in-port>1</in-port>\n        <ethernet-match>\n            <ethernet-type>\n                <type>0x800</type>\n            </ethernet-type>\n        </ethernet-match>\n        <ipv4-destination>1.2.3.4/32</ipv4-destination>\n    </match>\n    <id>5</id>\n    <table_id>0</table_id>\n    <instructions>\n        <instruction>\n            <order>0</order>\n            <apply-actions>\n                <action>\n                   <order>0</order>\n                   <set-next-hop-action>\n                        <ipv4-address>10.0.0.3/32</ipv4-address>\n                   </set-next-hop-action>\n                </action>\n                <action>\n                   <order>1</order>\n                   <output-action>\n                        <output-node-connector>3</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n            </apply-actions>\n        </instruction>\n    </instructions>\n</flow>"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add Flow to Lithium with RPC",
+			"request": {
+				"url": "{{rpc}}/sal-flow:add-flow",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"input\": {   \n        \"transaction-uri\" : \"foo\",\n        \"node\" : \"/opendaylight-inventory:nodes/opendaylight-inventory:node[opendaylight-inventory:id=\\\"openflow:1\\\"]\",\n        \"flow-table\" : \"/opendaylight-inventory:nodes/opendaylight-inventory:node[opendaylight-inventory:id=\\\"openflow:1\\\"]/flow-node-inventory:table[flow-node-inventory:id=\\\"1\\\"]\",\n        \"flow-ref\" : \"/opendaylight-inventory:nodes/opendaylight-inventory:node[opendaylight-inventory:id=\\\"openflow:1\\\"]/flow-node-inventory:table[flow-node-inventory:id=\\\"1\\\"]/flow-node-inventory:flow[flow-node-inventory:id=\\\"1\\\"]\",\n        \"match\": {\n            \"ethernet-match\" : {\n                \"ethernet-type\" : {\n                    \"type\" : \"0x800\"\n                }\n            },\n            \"ip-match\": {\n                \"ip-protocol\" : 17,\n                \"ip-proto\" : \"ipv4\"\n            },\n            \"ipv4-source\" : \"0.0.0.0/32\",\n            \"ipv4-destination\" : \"255.255.255.255/32\",\n            \"udp-source-port\" : 68\n        },\n        \"instructions\": {\n            \"instruction\": [    \n                {\n                    \"order\": 0,\n                    \"apply-actions\": {\n                        \"action\": [\n                            {\n                                \"order\": 0,\n                                \"set-tp-src-action\" : { \n                                    \"port\" : 1234\n                                }\n                            },\n                            {\n                                \"order\": 1,\n                                \"output-action\": { \n                                    \"output-node-connector\": \"1\",\n                                    \"max-length\": 65535\n                                }\n                            }\n                        ]\n                    }\n                }\n            ]\n        },\n        \"priority\": 2,\n        \"idle-timeout\": 0,\n        \"hard-timeout\": 0,\n        \"cookie\": 123456,\n        \"flow-name\" : \"foo\"\n    }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Lithium change LLDP MAC",
+			"request": {
+				"url": "{{cfg}}/{{ctrl}}/config:modules/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"config:module\" : [\n{\n\"type\": \"lldp-speaker:lldp-speaker\",\n\"name\": \"lldp-speaker\",\n\"lldp-speaker:address-destination\": \"01:23:00:00:00:00\",\n\"lldp-speaker:rpc-registry\": {\n\"name\": \"binding-rpc-broker\",\n\"type\": \"opendaylight-md-sal-binding:binding-rpc-registry\"\n},\n\"lldp-speaker:data-broker\": {\n\"name\": \"binding-data-broker\",\n\"type\": \"opendaylight-md-sal-binding:binding-async-data-broker\"\n}\n}]}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "change MAC address",
+			"request": {
+				"url": "{{cfg}}/{{ctrl}}/config:modules/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"config:module\" : [\n    {\n        \"type\": \"lldp-speaker:lldp-speaker\",\n        \"name\": \"lldp-speaker\",\n        \"lldp-speaker:address-destination\": \"01:23:00:00:00:00\",\n        \"lldp-speaker:rpc-registry\": {\n            \"name\": \"binding-rpc-broker\",\n            \"type\": \"opendaylight-md-sal-binding:binding-rpc-registry\"\n        },\n        \"lldp-speaker:data-broker\": {\n            \"name\": \"binding-data-broker\",\n            \"type\": \"opendaylight-md-sal-binding:binding-async-data-broker\"\n        }\n    }\n]}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Change DHCP request source port",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/1/flow/1",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic YWRtaW46YWRtaW4=",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<flow xmlns=\"urn:opendaylight:flow:inventory\">\n    <priority>1</priority>\n    <flow-name>mod-dhcp-port</flow-name>\n    <match>\n        <ethernet-match>\n            <ethernet-type>\n                <type>0x800</type>\n            </ethernet-type>\n        </ethernet-match>\n        <ipv4-destination>255.255.255.255/32</ipv4-destination>\n        <ipv4-source>0.0.0.0/32</ipv4-source>\n        <ip-match>\n            <ip-protocol>17</ip-protocol>\n            <ip-proto>ipv4</ip-proto>\n        </ip-match>\n        <udp-source-port>68</udp-source-port>\n    </match>\n    <id>1</id>\n    <table_id>1</table_id>\n    <instructions>\n        <instruction>\n            <order>0</order>\n            <apply-actions>\n                <action>\n                   <order>0</order>\n                   <set-field>\n                        <udp-source-port>1234</udp-source-port>\n                   </set-field>\n                </action>\n            </apply-actions>\n        </instruction>\n    </instructions>\n</flow>"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "set DSCP",
+			"request": {
+				"url": "{{cfg}}/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "{{authorization}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<flow xmlns=\"urn:opendaylight:flow:inventory\">\n    <priority>0</priority>\n    <flow-name>dscp-set</flow-name>\n    <match>\n        <in-port>7</in-port>\n        <ethernet-match>\n            <ethernet-type>\n                <type>0x800</type>\n            </ethernet-type>\n        </ethernet-match>\n        <ipv4-destination>2.2.2.2/32</ipv4-destination>\n    </match>\n    <id>0</id>\n    <table_id>0</table_id>\n    <instructions>\n        <instruction>\n            <order>0</order>\n            <apply-actions>\n                <action>\n                    <order>0</order>\n                    <set-field>\n                        <ip-match>\n                            <ip-dscp>46</ip-dscp>\n                        </ip-match>\n                    </set-field>\n                </action>\n                <action>\n                   <order>1</order>\n                   <output-action>\n                       <output-node-connector>8</output-node-connector>\n                       <max-length>65535</max-length>\n                   </output-action>\n                </action>\n            </apply-actions>\n        </instruction>\n    </instructions>\n</flow>"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Push a Flow IPv4",
+			"request": {
+				"url": "{{cfg}}/restconf/config/opendaylight-inventory:nodes/node/openflow:{{openflow-node}}/table/0/flow/1",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic YWRtaW46YWRtaW4=",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n<flow xmlns=\"urn:opendaylight:flow:inventory\">\r\n    <strict>false</strict>\r\n    <instructions>\r\n        <instruction>\r\n            <order>0</order>\r\n            <apply-actions>\r\n                <action>\r\n                    <order>0</order>\r\n                    <dec-nw-ttl/>\r\n                </action>\r\n            </apply-actions>\r\n        </instruction>\r\n    </instructions>\r\n    <table_id>0</table_id>\r\n    <id>1</id>\r\n    <match>\r\n        <ethernet-match>\r\n            <ethernet-type>\r\n                <type>2048</type>\r\n            </ethernet-type>\r\n        </ethernet-match>\r\n        <ipv4-destination>192.168.0.2/24</ipv4-destination>\r\n        <ipv4-source>192.168.0.4/32</ipv4-source>\r\n    </match>\r\n    <flow-name>Load Balance 1</flow-name>\r\n    <priority>32767</priority>\r\n</flow>"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

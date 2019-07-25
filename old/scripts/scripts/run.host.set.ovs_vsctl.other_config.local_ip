@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for host in $(cat $1); do
+    ssh "$host" "sudo ovs-vsctl set Open_vSwitch . other_config:local_ip=$host" &
+done

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+die() {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -eq 3 ] || die "Script to copy a file to multiple hosts. Usage: $0 <host_list> <file> <destination_dir>"
+
+for host in $(cat $1); do
+    echo "copying to.. $host"
+    scp "$2" "$host:$3"
+done

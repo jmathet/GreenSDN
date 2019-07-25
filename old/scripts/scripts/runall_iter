@@ -1,0 +1,13 @@
+#!/bin/bash
+
+die() {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -eq 2 ] || die "Run a command on multiple hosts, waiting for one host to complete the command before running on the next host. Usage: $0 <host_list> 'command to run in all switches'"
+
+for host in $(cat $1); do
+    echo "Running command: $2 , on a host: $host"
+    ssh "$host" "$2"
+done

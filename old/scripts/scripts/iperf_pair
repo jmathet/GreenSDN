@@ -1,0 +1,11 @@
+#!/bin/bash
+
+die() {
+    echo >&2 "$@"
+    exit 1
+}
+
+[ "$#" -ge 3 ] || die "Run iperf3 on a server and a client. Usage: $0 <server> <server_port> <client> 'client parameter'"
+
+ssh $1 'sh -c "( (nohup iperf3 -s -1 -p '$2' &> /dev/null) &)"'
+ssh $3 "iperf3 -J -c '$1' -p '$2' '$4'"
