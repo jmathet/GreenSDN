@@ -78,6 +78,6 @@ if __name__ == "__main__":
     print(json.dumps(topoManager.linkPorts))
 
     # Draw the topology
-    #topoManager.draw_topo()
+    topoManager.draw_topo()
 
     print("end")
