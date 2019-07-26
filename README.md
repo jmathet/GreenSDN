@@ -26,3 +26,18 @@ GreenSDN
 * Python packages :
     *   networkx
     *   matplolib
+
+# Run the appliction
+
+1. Run ONOS controller
+
+``` ~$ cd onos```
+``` ~/onos$ bazel run onos-local -- clean debug```
+
+2. Run CLI
+``` ~/onos$ ./tools/test/bin/onos localhost ```
+
+3. Create network (mininet)
+
+``` ~$ cd GreenSDN/mininet/ ```
+``` ~/GreenSDN/mininet$ sudo python fattree_k4.py ```

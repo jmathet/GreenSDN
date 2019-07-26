@@ -93,6 +93,27 @@ class FatTree( Topo ):
                     self.HostList[self.density * x + i],
                     **linkopts)
 
+"""
+Set IP
+"""
+def setHostIp(net, topo):
+    hosts = []
+    for k in xrange(len(topo.HostList)):
+        hosts.append(net.get(topo.HostList[k]))
+
+    h = 0
+    end = topo.pod/2
+    print (end)
+    for pod in range(1, topo.iCoreLayerSwitch + 1):
+        for edgeSwitchNummber in range(1, end+1):
+            for hostNbInSwitch in range(1, end+1):
+                hosts[h].setIP("10.%d.%d.%d" % (pod, edgeSwitchNummber, hostNbInSwitch))
+                #print("pod = " + str(pod) + " / edgeSwitchNummber = " + str(edgeSwitchNummber) + " / hostNbInSwitch = " + str(hostNbInSwitch))
+                #print(hosts[h].IP())
+                #print(h+1)
+                h += 1
+                
+
 
 topos = { 'fattree' : ( lambda k : FatTree(k)) }
 
@@ -103,6 +124,8 @@ def runMyNetwork():
     net = Mininet(topo=mytopo, link = TCLink, controller=RemoteController( 'c0', ip='130.194.73.219')) #TODO : mettre le bon controleur
     #net = Mininet(topo=mytopo, link=TCLink)
     net.start()
+    # Set hosts IP addresses.
+    setHostIp(net, mytopo)
     CLI(net)
 
     #net.pingAll()
