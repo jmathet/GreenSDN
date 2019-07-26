@@ -41,7 +41,6 @@ class TopoManager(object):
 
             srcToDst = srcDevice + b'::' + dstDevice #TODO: Comprendre pourquoi b est utile ici ?
             self.linkPorts[srcToDst] = srcPort + b'::' + dstPort
-            # TODO: store the correspondance between src/dst and portIN/portOUT
 
         reply = getJsonData(CONTROLLER_URL + "/hosts")
         if 'hosts' not in reply:
@@ -78,6 +77,6 @@ if __name__ == "__main__":
     print(json.dumps(topoManager.linkPorts))
 
     # Draw the topology
-    topoManager.draw_topo()
+    #topoManager.draw_topo()
 
     print("end")
