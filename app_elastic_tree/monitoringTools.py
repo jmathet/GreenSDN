@@ -77,15 +77,31 @@ def postFlowRule(deviceID, inPort, outPort):
     r = postJsonData(FLOWS_URL, flowRule)
     return r
 
-def postFlowRule_dstIP_outPort(deviceID, destIP, outPort):
+def postFlowRule_dstIP_outPort(deviceID, destIP, outPort, priority):
     # Loading the flow tule template
     with open('ruleTemplate_IPdest_portOUT.json') as json_file:  
         flowRule = json.load(json_file)
     # Replacing some fields
+    flowRule["flows"][0]["priority"] = str(priority)
     flowRule["flows"][0]["deviceId"] = deviceID
     flowRule["flows"][0]["treatment"]["instructions"][0]["port"] = outPort
     flowRule["flows"][0]["selector"]["criteria"][0]["ip"] = destIP
-    print(json.dumps(flowRule))
+    flowRule["flows"][0]["selector"]["criteria"][0]["type"] = "IPV4_DST"
+    #print(json.dumps(flowRule))
+    r = postJsonData(FLOWS_URL, flowRule)
+    return r
+
+def postFlowRule_srcIP_outPort(deviceID, srcIP, outPort, priority):
+    # Loading the flow tule template
+    with open('ruleTemplate_IPdest_portOUT.json') as json_file:  
+        flowRule = json.load(json_file)
+    # Replacing some fields
+    flowRule["flows"][0]["priority"] = str(priority)
+    flowRule["flows"][0]["deviceId"] = deviceID
+    flowRule["flows"][0]["treatment"]["instructions"][0]["port"] = outPort
+    flowRule["flows"][0]["selector"]["criteria"][0]["ip"] = srcIP
+    flowRule["flows"][0]["selector"]["criteria"][0]["type"] = "IPV4_SRC"
+    #print(json.dumps(flowRule))
     r = postJsonData(FLOWS_URL, flowRule)
     return r
 
