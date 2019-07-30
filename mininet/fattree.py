@@ -5,6 +5,7 @@ from mininet.node import Controller, RemoteController
 from mininet.log import setLogLevel, info
 from mininet.cli import CLI
 from mininet.link import TCLink
+import sys
 
 
 class FatTree( Topo ):
@@ -104,13 +105,13 @@ def setHostIp(net, topo):
     h = 0
     end = topo.pod/2
     print (end)
-    for pod in range(1, topo.iCoreLayerSwitch + 1):
+    for pod in range(1, topo.pod + 1):
         for edgeSwitchNummber in range(1, end+1):
             for hostNbInSwitch in range(1, end+1):
+                print("pod = " + str(pod) + " / edgeSwitchNummber = " + str(edgeSwitchNummber) + " / hostNbInSwitch = " + str(hostNbInSwitch))
                 hosts[h].setIP("10.%d.%d.%d" % (pod, edgeSwitchNummber, hostNbInSwitch))
-                #print("pod = " + str(pod) + " / edgeSwitchNummber = " + str(edgeSwitchNummber) + " / hostNbInSwitch = " + str(hostNbInSwitch))
-                #print(hosts[h].IP())
-                #print(h+1)
+                print(hosts[h].IP())
+                print(h+1)
                 h += 1
                 
 
@@ -118,9 +119,9 @@ def setHostIp(net, topo):
 topos = { 'fattree' : ( lambda k : FatTree(k)) }
 
 
-def runMyNetwork():
+def runMyNetwork(k):
     "Create Fat Tree network"
-    mytopo = FatTree(4)
+    mytopo = FatTree(k)
     net = Mininet(topo=mytopo, link = TCLink, controller=RemoteController( 'c0', ip='130.194.73.219')) #TODO : mettre le bon controleur
     net.start()
 
@@ -136,4 +137,7 @@ def runMyNetwork():
 if __name__ == '__main__':
     # Tell mininet to print useful information
     setLogLevel('info')
-    runMyNetwork()
+    if (len(sys.argv) != 2):
+        print("Usage : sudo python fattree.py k")
+    else: 
+        runMyNetwork(int(sys.argv[1]))

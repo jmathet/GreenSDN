@@ -15,7 +15,7 @@ FLOWS_URL = CONTROLLER_URL + "/flows"
 PORTSTAT_URL = CONTROLLER_URL + "/statistics/ports"
 PORT_URL = CONTROLLER_URL + "/devices/"
 
-k = 4 # Switch degree
+k = 8 # Switch degree
 
 EDGE_DEVICES = ["of:0000000000000bb9",
                 "of:0000000000000bba",

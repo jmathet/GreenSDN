@@ -9,9 +9,9 @@ def installDefaultPaths(topo):
     
     # EDGE LAYER SWITCHES
     for s in range(len(EDGE_DEVICES)):
-        edgeSwitchNbinPod = ((s)%2) +1
+        edgeSwitchNbinPod = ((s) % density) +1
         sw = EDGE_DEVICES[s]
-        podNb = int(math.ceil((s+1)/2.0))
+        podNb = int(math.ceil((s+1)/float(density)))
         subsubNet = "10." + str(podNb) + "." + str(edgeSwitchNbinPod) + "."
 
         for h in range(1, density+1):
@@ -34,7 +34,7 @@ def installDefaultPaths(topo):
     c = 0
     for s in range(len(AGREGATION_DEVICES)):
         sw = AGREGATION_DEVICES[s]
-        podNb = int(math.ceil((s+1)/2.0))
+        podNb = int(math.ceil((s+1)/float(density)))
         subNet = "10." + str(podNb) + "."
 
         for i in range(1, density+1): # For each subsubNet in the current pod
@@ -50,14 +50,15 @@ def installDefaultPaths(topo):
             coreSwicthID = CORE_DEVICES[c]
             outPort = topo.linkPorts[sw + "::" + coreSwicthID].split("::")[0]
             postFlowRule_srcIP_outPort(sw, subsubNetIP, outPort, UpPriority)
-            if (c<3):
+            if (c < k-1): 
                 c += 1
             else:
                 c = 0
 
-    # CORE LAYER SWITCHES
+    # CORE LAYER SWITCHES (downstream traffic)
     for s in range(len(CORE_DEVICES)):
         sw = CORE_DEVICES[s]
+
         if (s >= k/2):
             offset = 1
         else:
@@ -67,6 +68,11 @@ def installDefaultPaths(topo):
             aggrSwitchID = AGREGATION_DEVICES[(pod-1)*density + offset] # Aggr swicth connected to the current pod
             outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0]
             postFlowRule_dstIP_outPort(sw, str(subNet), str(outPort), DownPriority)
+            if (k>4):
+                aggrSwitchID = AGREGATION_DEVICES[(pod-1)*density + offset +2] # Aggr swicth connected to the current pod
+                outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0]
+                postFlowRule_dstIP_outPort(sw, str(subNet), str(outPort), DownPriority)
+
     
 def main():
     # Initialize Topo Manger and get the latest version of the topology
