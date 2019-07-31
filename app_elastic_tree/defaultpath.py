@@ -5,7 +5,8 @@ import math
 def installDefaultPaths(topo):
     DownPriority = 600
     UpPriority = 5
-    density = k/2 # Number of devices connected to 1 edge switch
+    k = topo.degree
+    density = k/2 # Number of devices in each pod layer
     
     # EDGE LAYER SWITCHES
     for s in range(len(EDGE_DEVICES)):
@@ -75,10 +76,14 @@ def installDefaultPaths(topo):
 
     
 def main():
-    # Initialize Topo Manger and get the latest version of the topology
-    topo = TopoManager()
-    installDefaultPaths(topo)
-
+    # Initialize Topo Manger, get the latest version of the topology and set default paths
+    if (len(sys.argv) != 2):
+        print("Usage : python defaultpath.py k")
+    else: 
+        # Initialize Topo Manger and get the latest version of the topology
+        k = int(sys.argv[1]) # Get fat-tree degree from args
+        topo = TopoManager(k)
+        installDefaultPaths(topo)
     return 0
 
 if __name__ == "__main__":

@@ -15,7 +15,8 @@ FLOWS_URL = CONTROLLER_URL + "/flows"
 PORTSTAT_URL = CONTROLLER_URL + "/statistics/ports"
 PORT_URL = CONTROLLER_URL + "/devices/"
 
-k = 8 # Switch degree
+CHAIN_NAME = "networkId"
+interval = 0.3
 
 EDGE_DEVICES = ["of:0000000000000bb9",
                 "of:0000000000000bba",
@@ -38,15 +39,6 @@ CORE_DEVICES = ["of:00000000000003e9",
                 "of:00000000000003eb",
                 "of:00000000000003ec"]
 
-def portNumber2Mac(halfurl, deviceId):
-    deviceId = deviceId.replace(":", "%3A")
-    url = halfurl + deviceId + "/ports"
-    mac = getJsonData(url)
-
-    mapping = {}
-    for port in mac["ports"]:
-	    mapping[port["port"]] = port["annotations"]["portMac"]
-    return mapping
 
 def getJsonData(url):
     r = requests.get(url, auth=auth)

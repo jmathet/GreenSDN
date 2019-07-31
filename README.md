@@ -34,8 +34,9 @@ GreenSDN
 ``` ~$ cd onos```
 ``` ~/onos$ bazel run onos-local -- clean debug```
 
-2. Run CLI
+2. Run CLI and activate some onos application
 ``` ~/onos$ ./tools/test/bin/onos localhost ```
+``` app activate proxyarp``` (for default path algo)
 
 3. Create network (mininet)
 
