@@ -41,3 +41,14 @@ GreenSDN
 
 ``` ~$ cd GreenSDN/mininet/ ```
 ``` ~/GreenSDN/mininet$ sudo python fattree_k4.py ```
+
+# Network topology
+
+Fat-tree topology
+
+## Network IP adresses
+IP networks in a ```k=4``` fat-tree topology.
+
+<img src="network_GRAPH_16HOSTS(IP).png"
+     alt="Markdown png"
+     style="float: left; margin-right: 10px;" />
