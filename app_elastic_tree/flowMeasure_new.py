@@ -5,31 +5,40 @@ import math
 import sys
 
 from monitoringTools import *
+from topo_discovery import *
 
 
-def getFlowStat(k, r):
+def getFlowStat(topo, r):
+    # topo : topology get from ONOS
     # r : link rate paraneter (to set the desired average link utilisation)
+    k = topo.degree
     density = k/2
     
     listLAgg_down_p = [] # Number of down links required to suport the down-traffic (where the pod number p is the list index)
     listLAgg_up_p = [] # Number of down links required to suport the up-traffic (where the pod number p is the list index)
     NAgg_p = [] # Minimum number of active aggregation switches reauired to support traffic (where the pod number p is the list index)
     
+    allFlowStat = getAllFlowStat()
+
     for p in range(0,k): # For each pod
         listLEdge_up_p_e = [] # Number of links for edge swicth e in pod p (where 2*p+e is the list index)
         for j in range(0,density): # For each edge switch in the pod p 
             rateUP = []
             rateDOWN = []
             for i in range(0, density): # For each aggregation switch connected to the edge switch Ej in the pod p
-                flowStat = getFlowStatFromDevice(EDGE_DEVICES[density*p+j], str(i+1)) #TODO: recuperer le port de la topology
-                rateUP_i = flowStat["loads"][0]["rate"] # rate between edge Ej and aggreation Ai of the pod p in the up direction
+                edgeSitchID = EDGE_DEVICES[density*p+j]
+                aggrSwitchID = AGREGATION_DEVICES[density*p +i]
+                srcPort = topo.linkPorts[edgeSitchID + "::" + aggrSwitchID].split("::")[0] 
+                destPort = topo.linkPorts[edgeSitchID + "::" + aggrSwitchID].split("::")[1] 
+                flowStatUP = getFlowStatLink(allFlowStat, edgeSitchID, srcPort) 
+                flowStatDOWN = getFlowStatLink(allFlowStat, aggrSwitchID, destPort) 
+                rateUP_i = flowStatUP["rate"] # rate between edge Ej and aggreation Ai of the pod p in the up direction
                 rateUP.append(rateUP_i)
-                rateDOWN_i = flowStat["loads"][1]["rate"] # rate between edge Ej and aggreation Ai of the pod p in the down direction 
+                rateDOWN_i = flowStatDOWN["rate"] # rate between edge Ej and aggreation Ai of the pod p in the down direction 
                 rateDOWN.append(rateDOWN_i)
-                print(rateDOWN_i)
 
-            LEdge_up_p_e = (sum(rateUP)) # total rate up in ? TODO: ajouter math.ceil
-            LEdge_down_p_e = (sum(rateDOWN)) # total rate down in ? TODO: ajouter math.ceil
+            LEdge_up_p_e = (sum(rateUP))/(2.0**20)*8*2 # total rate up in ? TODO: ajouter math.ceil
+            LEdge_down_p_e = (sum(rateDOWN))/(2.0**20)*8*2 # total rate down in ? TODO: ajouter math.ceil
             listLEdge_up_p_e.append(LEdge_up_p_e)
 
             LEdge_p_e = max(LEdge_up_p_e,LEdge_down_p_e,1)
@@ -49,16 +58,22 @@ def getFlowStat(k, r):
             rateUP = []
             rateDOWN = []
             for i in range(0, density): # For each edge switch connected to the aggregation switch Aj of the pod p
-                url = FLOWSSTAT_URL + "?device=" + AGREGATION_DEVICES[density*p+j] + "&port=" + str(i+1) #TODO: recuperer le port de la topology
-                flowStat = getJsonData(url)
-                #print(json.dumps(flowStat, indent=4, sort_keys=True)) # TODO: a supprimer
-                rateUP_i = flowStat["loads"][0]["rate"] # Rate between aggregation switch Aj of the pod p in the up direction and Ci 
+                x = density*p+j
+                aggrSwitchID = AGREGATION_DEVICES[x]
+                coreSwitchID = CORE_DEVICES[(x%density)*density +i]
+                #print("\n" + str(x+1) + " - " + str((x%density)*density +i+1))
+                
+                srcPort = topo.linkPorts[aggrSwitchID + "::" + coreSwitchID].split("::")[0] 
+                destPort = topo.linkPorts[aggrSwitchID + "::" + coreSwitchID].split("::")[1] 
+                flowStatUP = getFlowStatLink(allFlowStat, aggrSwitchID, srcPort) 
+                flowStatDOWN = getFlowStatLink(allFlowStat, coreSwitchID, destPort) 
+                rateUP_i = flowStatUP["rate"] # Rate between aggregation switch Aj of the pod p in the up direction and Ci 
                 rateUP.append(rateUP_i)
-                rateDOWN_i = flowStat["loads"][1]["rate"] # Rate between aggregation switch Aj of the pod p in the down direction and Ci 
+                rateDOWN_i = flowStatDOWN["rate"] # Rate between aggregation switch Aj of the pod p in the down direction and Ci 
                 rateDOWN.append(rateDOWN_i)
 
-            LAgg_up_p = LAgg_up_p + sum(rateUP) # total rate up in ?
-            LAgg_down_p = LAgg_down_p + sum(rateDOWN) # total rate down in ?
+            LAgg_up_p = LAgg_up_p + sum(rateUP)/(2.0**20)*8*2 # total rate up in ?
+            LAgg_down_p = LAgg_down_p + sum(rateDOWN)/(2.0**20)*8*2 # total rate down in ?
 
         listLAgg_up_p.append(LAgg_up_p)
 
@@ -89,7 +104,8 @@ if __name__ == "__main__":
         print("Usage : python flowMeasure.py k")
     else: 
         k = int(sys.argv[1])
-        [NCore, NAgg_p] = getFlowStat(k, 1)
+        topo = TopoManager(int(sys.argv[1]))
+        [NCore, NAgg_p] = getFlowStat(topo, 1)
         print("Ncore = " + str(NCore))
         print("NAgg_p = " + str(NAgg_p))
 

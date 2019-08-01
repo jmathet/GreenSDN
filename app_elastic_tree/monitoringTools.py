@@ -12,6 +12,8 @@ DEFAULT_CAPACITY = 5e8
 FLOWSSTAT_URL = CONTROLLER_URL + "/statistics/flows/link"
 FLOWS_URL = CONTROLLER_URL + "/flows" 
 
+LINK_URL = CONTROLLER_URL + "/links"
+
 PORTSTAT_URL = CONTROLLER_URL + "/statistics/ports"
 PORT_URL = CONTROLLER_URL + "/devices/"
 
@@ -52,8 +54,15 @@ def postJsonData(url, jsonFile):
     r = requests.post(url, data=json.dumps(jsonFile), auth=auth, headers=headers)
     return r
 
-def getFlowStatFromDevice(device, port):
-    url = FLOWSSTAT_URL + "?device=" + device + "&port=" + port
+def getFlowStatLink(allFlowStat, device, port):
+    linkURL = LINK_URL + "?device=" + device.replace(":","%3A") + "&port=" + str(port)
+    for load in allFlowStat["loads"]:
+        if (load["link"] == linkURL):
+            return load     
+    return("NOT FIND")
+
+def getAllFlowStat():
+    url = FLOWSSTAT_URL 
     return(getJsonData(url))
 
 
