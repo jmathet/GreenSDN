@@ -72,7 +72,14 @@ if __name__ == "__main__":
     if (len(sys.argv) != 2):
         print("Usage : python topo_discovery.py k")
     else: 
-        topoManager = TopoManager(int(sys.argv[1]))
+        k = int(int(sys.argv[1]))
+        if k==4:
+            from deviceList_k4 import *
+        if k==8:
+            from deviceList_k8 import *
+
+        topoManager = TopoManager(k)
+        
         print(topoManager.degree)
         # Print some usefull information
         print("\n Host location mapping\n")

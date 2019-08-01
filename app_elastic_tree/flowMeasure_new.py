@@ -104,8 +104,14 @@ if __name__ == "__main__":
         print("Usage : python flowMeasure.py k")
     else: 
         k = int(sys.argv[1])
-        topo = TopoManager(int(sys.argv[1]))
+        if k==4:
+            from deviceList_k4 import *
+        if k==8:
+            from deviceList_k8 import *
+
+        topo = TopoManager(k)
         [NCore, NAgg_p] = getFlowStat(topo, 1)
+
         print("Ncore = " + str(NCore))
         print("NAgg_p = " + str(NAgg_p))
 

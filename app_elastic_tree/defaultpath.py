@@ -74,17 +74,18 @@ def installDefaultPaths(topo):
                 outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0]
                 postFlowRule_dstIP_outPort(sw, str(subNet), str(outPort), DownPriority)
 
-    
-def main():
+
+if __name__ == "__main__":
     # Initialize Topo Manger, get the latest version of the topology and set default paths
     if (len(sys.argv) != 2):
         print("Usage : python defaultpath.py k")
     else: 
         # Initialize Topo Manger and get the latest version of the topology
         k = int(sys.argv[1]) # Get fat-tree degree from args
+        if k==4:
+            from deviceList_k4 import *
+        if k==8:
+            from deviceList_k8 import *
+            
         topo = TopoManager(k)
         installDefaultPaths(topo)
-    return 0
-
-if __name__ == "__main__":
-    main()
