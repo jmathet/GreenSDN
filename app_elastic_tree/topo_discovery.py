@@ -14,9 +14,12 @@ class TopoManager(object):
         self.linkPorts = {} # Stores Link Ports - use : linkPorts[srcDeviceId::dstDeviceId] = srcPort::dstPort
         self.hostLocation = {} # Stores Host Switch Ports
         self.deviceId_to_chassisId = {} # id is 'of:00000000000000a1', chassisID is 'a1'
+
         self.retrieve_topo_from_ONOS()
 
     def retrieve_topo_from_ONOS(self):
+        
+        ## Get devices list
         reply = getJsonData(CONTROLLER_URL + "/devices")
         if 'devices' not in reply:
             return
@@ -25,6 +28,7 @@ class TopoManager(object):
             self.G.add_node(dev['id'], type='device')
             self.devices.append(dev['id'])
 
+        ## Get links list
         reply = getJsonData(CONTROLLER_URL + "/links")
         if 'links' not in reply:
             return
@@ -33,16 +37,16 @@ class TopoManager(object):
             srcPort = link['src']['port']
             dstDevice = link['dst']['device']
             dstPort = link['dst']['port']
-            #FIXME: Utility of this bandwith
-            if 'annotations' in link and 'bandwidth' in link['annotations']:
+            if 'annotations' in link and 'bandwidth' in link['annotations']: # FIXME: Utility of this bandwith
                     bw = int(link['annotations']['bandwidth']) * 1e6
             else:
                 bw = DEFAULT_CAPACITY
             self.G.add_edge(srcDevice, dstDevice, **{'bandwidth': bw})
 
-            srcToDst = srcDevice + b'::' + dstDevice #TODO: Comprendre pourquoi b est utile ici ?
+            srcToDst = srcDevice + b'::' + dstDevice 
             self.linkPorts[srcToDst] = srcPort + b'::' + dstPort
 
+        ## Get hosts list
         reply = getJsonData(CONTROLLER_URL + "/hosts")
         if 'hosts' not in reply:
             return
@@ -51,7 +55,7 @@ class TopoManager(object):
             for location in host['locations']:
                 self.G.add_edge(host['id'], location['elementId'],  **{'bandwidth': DEFAULT_ACCESS_CAPACITY})
                 ip = host['ipAddresses'][0]
-                switchId = location['elementId']
+                switchId = location['elementId'] # Get swictth connected
                 self.hostLocation[ip] = switchId + b'::' + location['port']
             self.hosts.append(host['id'])
             
@@ -74,9 +78,9 @@ if __name__ == "__main__":
     else: 
         k = int(int(sys.argv[1]))
         if k==4:
-            from deviceList_k4 import *
+            from deviceList.deviceList_k4 import *
         if k==8:
-            from deviceList_k8 import *
+            from deviceList.deviceList_k8 import *
 
         topoManager = TopoManager(k)
         

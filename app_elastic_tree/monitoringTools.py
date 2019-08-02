@@ -44,7 +44,7 @@ def getAllFlowStat():
     url = FLOWSSTAT_URL 
     return(getJsonData(url))
 
-
+# Post basic flow rule based on in-port and out-port to specific device
 def postFlowRule(deviceID, inPort, outPort):
     # Loading the flow tule template
     with open('ruleTemplate_portIN_portOUT.json') as json_file:  
@@ -57,9 +57,10 @@ def postFlowRule(deviceID, inPort, outPort):
     r = postJsonData(FLOWS_URL, flowRule)
     return r
 
+# Post flow rule based on destination IP, output port and prority to a specific device
 def postFlowRule_dstIP_outPort(deviceID, destIP, outPort, priority):
     # Loading the flow tule template
-    with open('ruleTemplate_IPdest_portOUT.json') as json_file:  
+    with open('ruleTemplate/ruleTemplate_IPdest_portOUT.json') as json_file:  
         flowRule = json.load(json_file)
     # Replacing some fields
     flowRule["flows"][0]["priority"] = str(priority)
@@ -67,13 +68,14 @@ def postFlowRule_dstIP_outPort(deviceID, destIP, outPort, priority):
     flowRule["flows"][0]["treatment"]["instructions"][0]["port"] = outPort
     flowRule["flows"][0]["selector"]["criteria"][0]["ip"] = destIP
     flowRule["flows"][0]["selector"]["criteria"][0]["type"] = "IPV4_DST"
-    #print(json.dumps(flowRule))
+    
     r = postJsonData(FLOWS_URL, flowRule)
     return r
 
+# Post flow rule based on source IP, output port and prority to a specific device
 def postFlowRule_srcIP_outPort(deviceID, srcIP, outPort, priority):
     # Loading the flow tule template
-    with open('ruleTemplate_IPdest_portOUT.json') as json_file:  
+    with open('ruleTemplate/ruleTemplate_IPdest_portOUT.json') as json_file:  
         flowRule = json.load(json_file)
     # Replacing some fields
     flowRule["flows"][0]["priority"] = str(priority)
@@ -85,6 +87,7 @@ def postFlowRule_srcIP_outPort(deviceID, srcIP, outPort, priority):
     r = postJsonData(FLOWS_URL, flowRule)
     return r
 
+# Delete all flow rules in a specific device
 def deleteAllFlowRule(deviceID):
     # Getting the list of flow rules for the current device
     url = FLOWS_URL + "/" + deviceID
