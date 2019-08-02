@@ -83,9 +83,10 @@ if __name__ == "__main__":
         print(topoManager.degree)
         # Print some usefull information
         print("\n Host location mapping\n")
-        print(json.dumps(topoManager.hostLocation))
+        print(json.dumps(topoManager.hostLocation, indent=4, sort_keys=True))
         print("\n Link port mapping\n")
-        print(json.dumps(topoManager.linkPorts))
+        print("length = " + str(len(topoManager.linkPorts)))
+        print(json.dumps(topoManager.linkPorts, indent=4, sort_keys=True))
 
         # Draw the topology
         #topoManager.draw_topo()
