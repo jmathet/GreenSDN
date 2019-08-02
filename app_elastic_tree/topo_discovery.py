@@ -2,9 +2,11 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from monitoringTools import *
 import logging
+import sys
 
 class TopoManager(object):
-    def __init__(self):
+    def __init__(self, k):
+        self.degree = k # Fat-tree degree
         self.G = nx.Graph()
         self.pos = None
         self.hosts = []
@@ -15,7 +17,6 @@ class TopoManager(object):
         self.retrieve_topo_from_ONOS()
 
     def retrieve_topo_from_ONOS(self):
-        logging.info("Retrieving Topology...")
         reply = getJsonData(CONTROLLER_URL + "/devices")
         if 'devices' not in reply:
             return
@@ -68,15 +69,24 @@ class TopoManager(object):
 
 if __name__ == "__main__":
     # Initialize Topo Manger and get the latest version of the topology
-    topoManager = TopoManager()
-    
-    # Print some usefull information
-    print("\n Host location mapping\n")
-    print(json.dumps(topoManager.hostLocation))
-    print("\n Link port mapping\n")
-    print(json.dumps(topoManager.linkPorts))
+    if (len(sys.argv) != 2):
+        print("Usage : python topo_discovery.py k")
+    else: 
+        k = int(int(sys.argv[1]))
+        if k==4:
+            from deviceList_k4 import *
+        if k==8:
+            from deviceList_k8 import *
 
-    # Draw the topology
-    #topoManager.draw_topo()
+        topoManager = TopoManager(k)
+        
+        print(topoManager.degree)
+        # Print some usefull information
+        print("\n Host location mapping\n")
+        print(json.dumps(topoManager.hostLocation, indent=4, sort_keys=True))
+        print("\n Link port mapping\n")
+        print("length = " + str(len(topoManager.linkPorts)))
+        print(json.dumps(topoManager.linkPorts, indent=4, sort_keys=True))
 
-    print("end")
+        # Draw the topology
+        #topoManager.draw_topo()
