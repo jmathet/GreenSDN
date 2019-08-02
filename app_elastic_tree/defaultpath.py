@@ -41,7 +41,7 @@ def installDefaultPaths(topo):
             subsubNet = subNet + str(i) + "." # example : 10.1.1.
             subsubNetIP = subsubNet + "0/24" # example : 10.1.1.0/24 
 
-            # Dowstream traffic
+            # Downstream traffic
             edgeSwitchId = topo.hostLocation[subsubNet + "1"].split("::")[0] # Edge Switch ID connected to 10.1.1.0 host network
             outPort = topo.linkPorts[sw + "::" + edgeSwitchId].split("::")[0] # Port between the current Aggr switch and the edge switch required
             postFlowRule_dstIP_outPort(sw, str(subsubNetIP), str(outPort), DownPriority)

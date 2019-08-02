@@ -38,11 +38,12 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
 
     ``` 
     ~$ cd onos
-     ~/onos$ bazel run onos-local -- clean debugm
+    ~/onos$ bazel run onos-local -- clean debugm
      ```
 
 2. Run CLI and activate some onos application
-    ``` ~/onos$ ./tools/test/bin/onos localhost
+    ``` 
+    ~/onos$ ./tools/test/bin/onos localhost
     onos > app activate proxyarp 
     onos > app activate fwd
     ``` 
@@ -52,20 +53,21 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
 
     ``` 
     ~$ cd GreenSDN/mininet/ 
-     ~/GreenSDN/mininet$ sudo python fattree.py <k>
-     mininet> pingall
+    ~/GreenSDN/mininet$ sudo python fattree.py <k>
+    mininet> pingall
      ```
 
 4. Deactivate forwarding ONOS app
 
-    ``` onos> app deactivate fwd 
+    ``` 
+    onos> app deactivate fwd 
     ```
 
 5. Create default path
     ```  
     ~$ cd GreenSDN/app_elastic_tree/ 
-     python defaultpath.py <k>
-     ```
+    python defaultpath.py <k>
+    ```
 
 # Network topology
 
@@ -73,9 +75,12 @@ Fat-tree topology
 
 ## Network IP adresses
 IP networks in a ```k=4``` fat-tree topology.
+The idea is the following : to create different sub-network depinding the position in the fat-tree topology. We decided to use ```10.0.0.0/8``` as network address. Then, each POD sub-network is identify throught the 8 following bits. The POD p is using the ```10.p.0.0/16``` network IP address. The next 8 bits are used to specify the number of the edge switch in the current POD, the IP address of this sub-network is : ```10.p.e.0/24```. Finally, the last 8 bits are used by the number of the host connected to the exdge switch e.
 
 <img src="network_GRAPH_16HOSTS(IP).png"
      alt="Markdown png"
      style="float: left; margin: 20px;" />
 
 ## Network default-path
+ Flow rules for downward traffic match the IP destination and send the traffic to the corresponding port. Every layer of switches only matches a certain number of bits of the IP address, this number corresponds to the netmask of the following sub-net.
+ The upward traffic is defined by: traffic that goes outside of the current sub-network. Here, only the source IP is used to balance the traffic on every links available. Once again, netmasks are used to reduced the number on flow rules.
