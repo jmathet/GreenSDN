@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import matplotlib.pyplot as plt
 import networkx as nx
 from monitoringTools import *
@@ -5,7 +7,7 @@ import logging
 import sys
 
 class TopoManager(object):
-    def __init__(self, k):
+    def __init__(self, k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES):
         self.degree = k # Fat-tree degree
         self.G = nx.Graph()
         self.pos = None
@@ -14,6 +16,9 @@ class TopoManager(object):
         self.linkPorts = {} # Stores Link Ports - use : linkPorts[srcDeviceId::dstDeviceId] = srcPort::dstPort
         self.hostLocation = {} # Stores Host Switch Ports
         self.deviceId_to_chassisId = {} # id is 'of:00000000000000a1', chassisID is 'a1'
+        self.AGGREGATION_DEVICES = AGREGATION_DEVICES
+        self.CORE_DEVICES = CORE_DEVICES
+        self.EDGE_DEVICES = EDGE_DEVICES
 
         self.retrieve_topo_from_ONOS()
 

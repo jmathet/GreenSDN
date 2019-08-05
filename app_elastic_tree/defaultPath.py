@@ -1,13 +1,21 @@
-from topo_discovery import *
+#!/usr/bin/env python
+
+from topoDiscovery import *
 from monitoringTools import *
 import math
+from runElasticTree import *
 
-def installDefaultPaths(topo):
+
+def installDefaultPaths(topo, Ncore, NAgg_p):
     DownPriority = 600
     UpPriority = 5
     k = topo.degree
     density = k/2 # Number of devices in each pod layer
     
+    EDGE_DEVICES = topo.EDGE_DEVICES
+    AGREGATION_DEVICES = topo.AGGREGATION_DEVICES
+    CORE_DEVICES = topo.CORE_DEVICES
+
     # EDGE LAYER SWITCHES
     for s in range(len(EDGE_DEVICES)):
         edgeSwitchNbinPod = ((s) % density) +1
@@ -24,7 +32,11 @@ def installDefaultPaths(topo):
 
             # Upstream Traffic
             host = subsubNet + str(h)
-            aggrSwitchID = AGREGATION_DEVICES[(podNb-1)*density + h-1] 
+            if (h > NAgg_p[podNb-1]):
+                offset = NAgg_p[podNb-1]
+            else:
+                offset = h
+            aggrSwitchID = AGREGATION_DEVICES[(podNb-1)*density + offset-1] 
             outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0] 
             hostIP = host + "/32"
             postFlowRule_srcIP_outPort(sw, hostIP, outPort, UpPriority)
@@ -57,7 +69,7 @@ def installDefaultPaths(topo):
     print(">> AGGREAGTION LAYER : down and up traffic OK")
 
     # CORE LAYER SWITCHES (downstream traffic)
-    for s in range(len(CORE_DEVICES)):
+    for s in range(Ncore):
         sw = CORE_DEVICES[s]
 
         offset = 0
@@ -67,11 +79,10 @@ def installDefaultPaths(topo):
             offset = 2
         if (s >= 3*k/2):
             offset = 3
-        print(str(s) + " - " + str(offset))
+        # print(str(s) + " - " + str(offset))
         for pod in range(1, k+1):
             subNet = "10." + str(pod) + ".0.0/16"
             aggrSwitchID = AGREGATION_DEVICES[(pod-1)*density + offset] # Aggr swicth connected to the current pod
-            print(aggrSwitchID)
             outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0]
             postFlowRule_dstIP_outPort(sw, str(subNet), str(outPort), DownPriority)
     print(">> CORE LAYER : down traffic OK")
@@ -88,5 +99,5 @@ if __name__ == "__main__":
         if k==8:
             from deviceList.deviceList_k8 import *
             
-        topo = TopoManager(k)
-        installDefaultPaths(topo)
+        topo = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
+        installDefaultPaths(topo, k, [2,2,2,2])
