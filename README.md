@@ -111,7 +111,7 @@ Fat-tree topology
 
 ## Network IP adresses
 IP networks in a ```k=4``` fat-tree topology.
-The idea is the following : to create different sub-network depinding the position in the fat-tree topology. We decided to use ```10.0.0.0/8``` as network address. Then, each POD sub-network is identify throught the 8 following bits. The POD p is using the ```10.p.0.0/16``` network IP address. The next 8 bits are used to specify the number of the edge switch in the current POD, the IP address of this sub-network is : ```10.p.e.0/24```. Finally, the last 8 bits are used by the number of the host connected to the exdge switch e.
+The idea is the following : to create different sub-network depinding the position in the fat-tree topology. We decided to use ```10.0.0.0/8``` as network address. Then, each POD sub-network is identify throught the 8 following bits. The POD p is using the ```10.p.0.0/16``` network IP address. The next 8 bits are used to specify the number of the edge switch in the current POD, the IP address of this sub-network is : ```10.p.e.0/24```. Finally, the last 8 bits are used by the number of the host connected to the edge switch e: ```10.p.e.h/24```
 
 <img src="figures/network_GRAPH_16HOSTS(IP).png"
      alt="Markdown png"
