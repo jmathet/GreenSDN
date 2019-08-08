@@ -74,6 +74,17 @@ def postFlowRule_dstIP_outPort(deviceID, destIP, outPort, priority):
     r = postJsonData(FLOWS_URL, flowRule)
     return r
 
+   # Post flow rule for internet access
+def postFlowRule_internet(deviceID, outPort):
+    # Loading the flow tule template
+    with open('ruleTemplate/ruleTemplate_internet_access.json') as json_file:  
+        flowRule = json.load(json_file)
+    # Replacing some fields
+    flowRule["flows"][0]["deviceId"] = deviceID
+    flowRule["flows"][0]["treatment"]["instructions"][0]["port"] = outPort
+    r = postJsonData(FLOWS_URL, flowRule)
+    return r
+
 # Post flow rule based on source IP, output port and prority to a specific device
 def postFlowRule_srcIP_outPort(deviceID, srcIP, outPort, priority):
     # Loading the flow tule template

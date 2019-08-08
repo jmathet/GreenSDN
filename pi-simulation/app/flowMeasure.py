@@ -5,6 +5,7 @@ from datetime import datetime
 import time
 import math
 import sys
+from deviceList.deviceList_Pi import *
 
 from monitoringTools import *
 from topoDiscovery import *
@@ -16,9 +17,6 @@ def getFlowStat(topo, r):
     k = topo.degree
     density = k/2
 
-    EDGE_DEVICES = topo.EDGE_DEVICES
-    AGREGATION_DEVICES = topo.AGGREGATION_DEVICES
-    CORE_DEVICES = topo.CORE_DEVICES
     
     listLAgg_down_p = [] # Number of down links required to suport the down-traffic (where the pod number p is the list index)
     listLAgg_up_p = [] # Number of down links required to suport the up-traffic (where the pod number p is the list index)

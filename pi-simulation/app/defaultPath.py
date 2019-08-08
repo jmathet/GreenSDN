@@ -4,17 +4,14 @@ from topoDiscovery import *
 from monitoringTools import *
 import math
 from runElasticTree import *
+from deviceList.deviceList_Pi import *
 
 
 def installDefaultPaths(topo, Ncore, NAgg_p):
     DownPriority = 600
-    UpPriority = 5
+    UpPriority = 500
     k = topo.degree
     density = k/2 # Number of devices in each pod layer
-    
-    EDGE_DEVICES = topo.EDGE_DEVICES
-    AGREGATION_DEVICES = topo.AGGREGATION_DEVICES
-    CORE_DEVICES = topo.CORE_DEVICES
 
     # EDGE LAYER SWITCHES
     for s in range(len(EDGE_DEVICES)):
@@ -22,8 +19,9 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
         sw = EDGE_DEVICES[s]
         podNb = int(math.ceil((s+1)/float(density)))
         subsubNet = "10." + str(podNb) + "." + str(edgeSwitchNbinPod) + "."
-
-        for h in range(1, density+1):
+        edgeDensity = HOST_IN_EDGE_DENSITY[s] # Number of hosts connected to the edge swicth s
+        #for h in range(1, density+1):
+        for h in range(1, edgeDensity+1):
             # Downstream traffic
             host = subsubNet + str(h)
             outPort = topo.hostLocation[host].split("::")[1]
@@ -48,8 +46,9 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
         sw = AGREGATION_DEVICES[s]
         podNb = int(math.ceil((s+1)/float(density)))
         subNet = "10." + str(podNb) + "."
-
-        for i in range(1, density+1): # For each subsubNet in the current pod
+        aggrDensity = HOST_IN_EDGE_DENSITY[s]
+        #for i in range(1, density+1): # For each subsubNet in the current pod
+        for i in range(1, aggrDensity+1):
             subsubNet = subNet + str(i) + "." # example : 10.1.1.
             subsubNetIP = subsubNet + "0/24" # example : 10.1.1.0/24 
 
@@ -68,36 +67,31 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
                 c = 0
     print(">> AGGREAGTION LAYER : down and up traffic OK")
 
-    # CORE LAYER SWITCHES (downstream traffic)
+    # CORE LAYER SWITCHES
     for s in range(Ncore):
         sw = CORE_DEVICES[s]
 
+        # Downstream traffic
         offset = 0
-        if (s >= k/2):
+        if (s == 1):
             offset = 1
-        if (s >= k):
-            offset = 2
-        if (s >= 3*k/2):
-            offset = 3
         # print(str(s) + " - " + str(offset))
-        for pod in range(1, k+1):
+        for pod in range(1, k/2+1):
             subNet = "10." + str(pod) + ".0.0/16"
             aggrSwitchID = AGREGATION_DEVICES[(pod-1)*density + offset] # Aggr swicth connected to the current pod
             outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0]
             postFlowRule_dstIP_outPort(sw, str(subNet), str(outPort), DownPriority)
+
+        # Up traffic (internet)
+
+        postFlowRule_dstIP_outPort(sw, "10.0.0.1/32", str(outPort), UpPriority)
+        outPort = topo.hostLocation["10.0.0.1"].split("::")[1]
+        postFlowRule_internet(sw, str(outPort))
+        print("coucou")
     print(">> CORE LAYER : down traffic OK")
 
 if __name__ == "__main__":
     # Initialize Topo Manger, get the latest version of the topology and set default paths
-    if (len(sys.argv) != 2):
-        print("Usage : python defaultpath.py k")
-    else: 
-        # Initialize Topo Manger and get the latest version of the topology
-        k = int(sys.argv[1]) # Get fat-tree degree from args
-        if k==4:
-            from deviceList.deviceList_k4 import *
-        if k==8:
-            from deviceList.deviceList_k8 import *
-            
-        topo = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
-        installDefaultPaths(topo, k, [2,2,2,2])
+    k=4
+    topo = TopoManager(k)
+    installDefaultPaths(topo, 2, [2,2])

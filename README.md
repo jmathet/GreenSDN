@@ -100,9 +100,8 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
     ``` 
     ~/onos$ ./tools/test/bin/onos localhost
     onos > app activate proxyarp 
-    onos > app activate fwd
     ``` 
-    (proxyarp : for default path algo, fwd : for the host discovery - will be deactivated later)
+<span style="color:red">/!\ WARNING </span> Without ```proxyarp``` default paths are not working
 
 
 # Network topology
@@ -120,3 +119,6 @@ The idea is the following : to create different sub-network depinding the positi
 ## Network default-path
  Flow rules for downward traffic match the IP destination and send the traffic to the corresponding port. Every layer of switches only matches a certain number of bits of the IP address, this number corresponds to the netmask of the following sub-net.
  The upward traffic is defined by: traffic that goes outside of the current sub-network. Here, only the source IP is used to balance the traffic on every links available. Once again, netmasks are used to reduced the number on flow rules.
+
+
+<span style="color:red">/!\ WARNING </span> Higher priority (high number) matches FIRST

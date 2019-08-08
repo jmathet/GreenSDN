@@ -6,8 +6,10 @@ from monitoringTools import *
 import logging
 import sys
 
+from deviceList.deviceList_Pi import *
+
 class TopoManager(object):
-    def __init__(self, k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES):
+    def __init__(self, k):
         self.degree = k # Fat-tree degree
         self.G = nx.Graph()
         self.pos = None
@@ -78,16 +80,7 @@ class TopoManager(object):
 
 if __name__ == "__main__":
     # Initialize Topo Manger and get the latest version of the topology
-    if (len(sys.argv) != 2):
-        print("Usage : python topo_discovery.py k")
-    else: 
-        k = int(int(sys.argv[1]))
-        if k==4:
-            from deviceList.deviceList_k4 import *
-        if k==8:
-            from deviceList.deviceList_k8 import *
-
-        topoManager = TopoManager(k)
+        topoManager = TopoManager(4)
         
         print(topoManager.degree)
         # Print some usefull information
