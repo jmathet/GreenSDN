@@ -70,7 +70,6 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
     # CORE LAYER SWITCHES
     for s in range(Ncore):
         sw = CORE_DEVICES[s]
-
         # Downstream traffic
         offset = 0
         if (s == 1):
@@ -83,11 +82,10 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
             postFlowRule_dstIP_outPort(sw, str(subNet), str(outPort), DownPriority)
 
         # Up traffic (internet)
-
-        postFlowRule_dstIP_outPort(sw, "10.0.0.1/32", str(outPort), UpPriority)
-        outPort = topo.hostLocation["10.0.0.1"].split("::")[1]
+        ip = "10.0.0." + str(s+1)
+        outPort = topo.hostLocation[ip].split("::")[1]
+        postFlowRule_dstIP_outPort(sw, ip + "/32", str(outPort), UpPriority)
         postFlowRule_internet(sw, str(outPort))
-        print("coucou")
     print(">> CORE LAYER : down traffic OK")
 
 if __name__ == "__main__":
