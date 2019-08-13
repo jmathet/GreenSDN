@@ -49,8 +49,8 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
         sw = AGREGATION_DEVICES[s]
         podNb = int(math.ceil((s+1)/float(density)))
         if (NAgg_p[podNb-1]==0):
-            if (c < len(CORE_DEVICES)-2): 
-                c += 2
+            if (c < len(CORE_DEVICES)-density): 
+                c += density
             else:
                 c = 0
             continue # Stop the current iteration of the loop, and continue with the next
@@ -109,4 +109,8 @@ if __name__ == "__main__":
             from deviceList.deviceList_k8 import *
             
         topo = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
-        installDefaultPaths(topo, 4, [2,2,2,2])
+        if k==4:
+            NAgg_p = [2,2,2,2]
+        if k==8:
+            NAgg_p = [4,4,4,4,4,4,4,4]
+        installDefaultPaths(topo, (k/2)**2, NAgg_p)
