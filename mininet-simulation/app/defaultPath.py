@@ -10,7 +10,7 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
     DownPriority = 600
     UpPriority = 5
     k = topo.degree
-    density = k/2 # Number of devices in each pod layer
+    density = int(k/2) # Number of devices in each pod layer
     
     EDGE_DEVICES = topo.EDGE_DEVICES
     AGREGATION_DEVICES = topo.AGGREGATION_DEVICES
@@ -40,6 +40,7 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
             outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0] 
             hostIP = host + "/32"
             postFlowRule_srcIP_outPort(sw, hostIP, outPort, UpPriority)
+            print(str(sw) + " - " + hostIP + " >>> " + str(aggrSwitchID))
     print(">> EDGE LAYER : down and up traffic OK")
 
     # AGGREGATION LAYER SWITCHES
@@ -47,6 +48,14 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
     for s in range(len(AGREGATION_DEVICES)):
         sw = AGREGATION_DEVICES[s]
         podNb = int(math.ceil((s+1)/float(density)))
+        if (NAgg_p[podNb-1]==0):
+            if (c < len(CORE_DEVICES)-2): 
+                c += 2
+            else:
+                c = 0
+            continue # Stop the current iteration of the loop, and continue with the next
+        else:
+            NAgg_p[podNb-1] = NAgg_p[podNb-1]-1
         subNet = "10." + str(podNb) + "."
 
         for i in range(1, density+1): # For each subsubNet in the current pod
@@ -100,4 +109,4 @@ if __name__ == "__main__":
             from deviceList.deviceList_k8 import *
             
         topo = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
-        installDefaultPaths(topo, k, [2,2,2,2])
+        installDefaultPaths(topo, 4, [2,2,2,2])

@@ -22,14 +22,17 @@ if __name__ == "__main__":
     topo = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
     
     
-    installDefaultPaths(topo, k, [2,2,2,2])
+    # installDefaultPaths(topo, k, [2,2,2,2])
 
-    time.sleep(5)
+    # time.sleep(5)
 
     while(1):
         topo = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
         [NCore, NAgg_p] = getFlowStat(topo, 1)
         installDefaultPaths(topo, NCore, NAgg_p)
 
-
         time.sleep(10) # Wait 10 sec
+
+
+    # [NCore, NAgg_p] = getFlowStat(topo, 1)
+    # installDefaultPaths(topo, NCore, NAgg_p)
