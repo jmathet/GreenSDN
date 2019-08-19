@@ -5,7 +5,8 @@ from mininet.node import Controller, RemoteController
 from mininet.log import setLogLevel, info
 from mininet.cli import CLI
 from mininet.link import TCLink
-import sys
+from mininet.util import waitListening
+import sys, time
 
 
 class FatTree( Topo ):
@@ -126,12 +127,31 @@ def runMyNetwork(k):
     net.start()
     # Set hosts IP addresses.
     setHostIp(net, mytopo)
+    # Ping all
+    # net.pingAll()
+    # generateTraffic(net,mytopo)
     # CLI running
     CLI(net)
-    #net.pingAll()
     net.stop()
     
+# def generateTraffic(net, topo):
 
+#     for bandwidth in range(50,1000, 100):
+#         print(bandwidth)
+#         for h in range(topo.iHost//2):
+#             src = net.hosts[h]
+#             dst = net.hosts[2*h +1]
+
+#             # Create the server command
+#             serverCmd = "iperf -s -u &"
+
+#             # Create the client command 
+#             clientCmd = "iperf -c " + dst.IP() + " -u -b " + str(bandwidth) + "m -t 10 &"
+
+#             # Send commands
+#             dst.cmd(serverCmd)
+#             src.cmd(clientCmd)
+#         time.sleep(10)
 
 if __name__ == '__main__':
     # Tell mininet to print useful information

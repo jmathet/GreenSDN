@@ -42,6 +42,11 @@ def getFlowStat(topo, r):
                 rateUP.append(rateUP_i)
                 rateDOWN_i = flowStatDOWN["rate"] # Rate between edge Ej and aggreation Ai of the pod p in the down direction 
                 rateDOWN.append(rateDOWN_i)
+                if flowStatUP["valid"]==False:
+                    print("ERROR")
+                if flowStatDOWN["valid"]==False:
+                    print("ERROR")
+                    
             print(sum(rateUP)*(8e-9)*2)
             LEdge_up_p_e = math.ceil(sum(rateUP)*(8e-9)*2/r) # Total rate up in Gbits/sec 
             LEdge_down_p_e = math.ceil(sum(rateDOWN)*(8e-9)*2/r) # Total rate down in Gbits/sec
@@ -49,7 +54,7 @@ def getFlowStat(topo, r):
 
             LEdge_p_e = max(LEdge_up_p_e,LEdge_down_p_e,1)
             # print("Number of links needs between the edge swicth " + str(density*p+j +1) + " and the aggregation layer")
-            print("LEdge_up_p_e = " + str(LEdge_up_p_e) + " Gbits/sec")
+            # print("LEdge_up_p_e = " + str(LEdge_up_p_e) + " Gbits/sec")
             # print("LEdge_down_p_e = " + str(LEdge_down_p_e) + " Gbits/sec")
             # print("LEdge_p_e = " + str(LEdge_p_e) + " (1 Gbits/sec links)")
         NAgg_up_p = max(listLEdge_up_p_e)
@@ -78,10 +83,10 @@ def getFlowStat(topo, r):
                 rateDOWN.append(rateDOWN_i)
                 if flowStatUP["valid"]==False:
                     print("ERROR")
-                print(rateDOWN_i*(8e-9)*2)
+                # print(rateDOWN_i*(8e-9)*2)
                 if flowStatDOWN["valid"]==False:
                     print("ERROR")
-                print(rateUP_i*(8e-9)*2)
+                # print(rateUP_i*(8e-9)*2)
 
             LAgg_up_p = LAgg_up_p + sum(rateUP)*(8e-9)*2/r # Total rate up in Gbits/sec
             LAgg_down_p = LAgg_down_p + sum(rateDOWN)*(8e-9)*2/r # Total rate down in Gbits/sec

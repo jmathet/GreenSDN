@@ -48,14 +48,15 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
     for s in range(len(AGREGATION_DEVICES)):
         sw = AGREGATION_DEVICES[s]
         podNb = int(math.ceil((s+1)/float(density)))
-        if (NAgg_p[podNb-1]==0):
+        if (NAgg_p[podNb-1]==0): # If there is no more switch to update
             if (c < len(CORE_DEVICES)-density): 
                 c += density
             else:
                 c = 0
-            continue # Stop the current iteration of the loop, and continue with the next
+            continue # Stop the current iteration of the loop, and continue with the next => continue with the next aggregation switch
         else:
-            NAgg_p[podNb-1] = NAgg_p[podNb-1]-1
+            NAgg_p[podNb-1] = NAgg_p[podNb-1]-1 # Decrement the number of switches to be updated
+            
         subNet = "10." + str(podNb) + "."
 
         for i in range(1, density+1): # For each subsubNet in the current pod

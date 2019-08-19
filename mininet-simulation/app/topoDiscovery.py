@@ -69,7 +69,9 @@ class TopoManager(object):
     def draw_topo(self, block=True):
         plt.figure()
         nx.draw_networkx_nodes(self.G, self.pos, nodelist=self.hosts, node_shape='o', node_color='w')
-        nx.draw_networkx_nodes(self.G, self.pos, nodelist=self.devices, node_shape='s', node_color='b')
+        nx.draw_networkx_nodes(self.G, self.pos, nodelist=self.CORE_DEVICES, node_shape='s', node_color='b')
+        nx.draw_networkx_nodes(self.G, self.pos, nodelist=self.AGGREGATION_DEVICES, node_shape='s', node_color='g')
+        nx.draw_networkx_nodes(self.G, self.pos, nodelist=self.EDGE_DEVICES, node_shape='s', node_color='k')
         nx.draw_networkx_labels(self.G.subgraph(self.hosts), self.pos, font_color='k')
         nx.draw_networkx_labels(self.G.subgraph(self.devices), self.pos, font_color='w',
                                 labels=self.deviceId_to_chassisId)
@@ -87,7 +89,7 @@ if __name__ == "__main__":
         if k==8:
             from deviceList.deviceList_k8 import *
 
-        topoManager = TopoManager(k)
+        topoManager = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
         
         print(topoManager.degree)
         # Print some usefull information
@@ -98,4 +100,4 @@ if __name__ == "__main__":
         print(json.dumps(topoManager.linkPorts, indent=4, sort_keys=True))
 
         # Draw the topology
-        #topoManager.draw_topo()
+        topoManager.draw_topo()

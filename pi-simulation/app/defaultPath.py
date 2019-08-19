@@ -45,6 +45,7 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
     for s in range(len(AGREGATION_DEVICES)):
         sw = AGREGATION_DEVICES[s]
         podNb = int(math.ceil((s+1)/float(density)))
+        # TODO: add modification (cf mininet app)
         subNet = "10." + str(podNb) + "."
         aggrDensity = HOST_IN_EDGE_DENSITY[s]
         #for i in range(1, density+1): # For each subsubNet in the current pod
