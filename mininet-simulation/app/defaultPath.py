@@ -7,8 +7,8 @@ from runElasticTree import *
 
 
 def installDefaultPaths(topo, Ncore, NAgg_p):
-    DownPriority = 600
-    UpPriority = 5
+    DownPriority = 4
+    UpPriority = 3
     k = topo.degree
     density = int(k/2) # Number of devices in each pod layer
     
@@ -40,7 +40,7 @@ def installDefaultPaths(topo, Ncore, NAgg_p):
             outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0] 
             hostIP = host + "/32"
             postFlowRule_srcIP_outPort(sw, hostIP, outPort, UpPriority)
-            print(str(sw) + " - " + hostIP + " >>> " + str(aggrSwitchID))
+            #print(str(sw) + " - " + hostIP + " >>> " + str(aggrSwitchID))
     print(">> EDGE LAYER : down and up traffic OK")
 
     # AGGREGATION LAYER SWITCHES

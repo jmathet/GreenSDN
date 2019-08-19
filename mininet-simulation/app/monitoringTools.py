@@ -2,6 +2,7 @@
 
 import requests
 import json
+import subprocess
 
 CONTROLLER_URL = "http://127.0.0.1:8181/onos/v1"
 
@@ -101,3 +102,27 @@ def deleteAllFlowRule(deviceID):
         r = delJsonData(url)
         print(url)
     return r
+
+def removeLinksOfDevice(position, layer):
+    # layer is 1 for the CORE switches, 2 for the AGGREGATION swicthes and 3 for the EDGE switches
+    # position in the position of the switche in the corresponding list (see device_list)
+    device = "s" + str(layer) + "00" + str(position)
+    for interface_i in range(1,5):
+        interface = device + str(interface_i)
+        bashCommand = "ifconfig " + interface + " down"
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+    
+    return error
+
+def addLinksOfDevice(position, layer):
+    # layer is 1 for the CORE switches, 2 for the AGGREGATION swicthes and 3 for the EDGE switches
+    # position in the position of the switche in the corresponding list (see device_list)
+    device = "s" + str(layer) + "00" + str(position)
+    for interface_i in range(1,5):
+        interface = device + str(interface_i)
+        bashCommand = "ifconfig " + interface + " up"
+        process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+    
+    return error

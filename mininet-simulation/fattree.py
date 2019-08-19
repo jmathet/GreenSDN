@@ -124,14 +124,13 @@ def runMyNetwork(k):
     mytopo = FatTree(k)
     net = Mininet(topo=mytopo, link = TCLink, controller=RemoteController( 'c0', ip='130.194.73.219')) #TODO : mettre le bon controleur
     net.start()
-
     # Set hosts IP addresses.
     setHostIp(net, mytopo)
     # CLI running
     CLI(net)
     #net.pingAll()
     net.stop()
-
+    
 
 
 if __name__ == '__main__':
