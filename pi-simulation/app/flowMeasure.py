@@ -41,8 +41,8 @@ def getFlowStat(topo, r):
                 rateDOWN_i = flowStatDOWN["rate"] # Rate between edge Ej and aggreation Ai of the pod p in the down direction 
                 rateDOWN.append(rateDOWN_i)
 
-            LEdge_up_p_e = math.ceil(sum(rateUP))/(2.0**30)*8*2 # Total rate up in Gbits/sec 
-            LEdge_down_p_e = math.ceil(sum(rateDOWN))/(2.0**30)*8*2 # Total rate down in Gbits/sec
+            LEdge_up_p_e = math.ceil(sum(rateUP)*(8e-9)*2) # Total rate up in Gbits/sec 
+            LEdge_down_p_e = math.ceil(sum(rateDOWN)*(8e-9)*2) # Total rate down in Gbits/sec
             listLEdge_up_p_e.append(LEdge_up_p_e)
 
             LEdge_p_e = max(LEdge_up_p_e,LEdge_down_p_e,1)
@@ -74,8 +74,8 @@ def getFlowStat(topo, r):
                 rateDOWN_i = flowStatDOWN["rate"] # Rate between aggregation switch Aj of the pod p in the down direction and Ci 
                 rateDOWN.append(rateDOWN_i)
 
-            LAgg_up_p = LAgg_up_p + sum(rateUP)/(2.0**30)*8*2 # Total rate up in Gbits/sec
-            LAgg_down_p = LAgg_down_p + sum(rateDOWN)/(2.0**30)*8*2 # Total rate down in Gbits/sec
+            LAgg_up_p = LAgg_up_p + sum(rateUP)*(8e-9)*2 # Total rate up in Gbits/sec
+            LAgg_down_p = LAgg_down_p + sum(rateDOWN)*(8e-9)*2 # Total rate down in Gbits/sec
 
         listLAgg_up_p.append(LAgg_up_p)
 
