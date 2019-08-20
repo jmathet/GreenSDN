@@ -6,7 +6,7 @@ import math
 from runElasticTree import *
 
 
-def installDefaultPaths(topo, NCore, NAgg_p):
+def installDefaultPaths(topo, NCore_c, NAgg_p):
     DownPriority = 4
     UpPriority = 3
     k = topo.degree
@@ -49,7 +49,7 @@ def installDefaultPaths(topo, NCore, NAgg_p):
         sw = AGREGATION_DEVICES[s]
         podNb = int(math.ceil((s+1)/float(density)))
         if (NAgg_p[podNb-1]==0): # If there is no more switch to update
-            if (c < NCore-density): 
+            if (c < len(CORE_DEVICES)-density): 
                 c += density
             else:
                 c = 0
@@ -69,17 +69,19 @@ def installDefaultPaths(topo, NCore, NAgg_p):
             postFlowRule_dstIP_outPort(sw, str(subsubNetIP), str(outPort), DownPriority)
 
             # Upstream traffic
-            coreSwicthID = CORE_DEVICES[c]
+            offset = i % NCore_c[i-1]
+            coreSwicthID = CORE_DEVICES[c + offset]
             outPort = topo.linkPorts[sw + "::" + coreSwicthID].split("::")[0]
             postFlowRule_srcIP_outPort(sw, subsubNetIP, outPort, UpPriority)
-            if (c < NCore-1): 
-                c += 1
-            else:
-                c = 0
+
+        if (c < len(CORE_DEVICES)-density): 
+            c += density
+        else:
+            c = 0
     print(">> AGGREAGTION LAYER : down and up traffic OK")
 
     # CORE LAYER SWITCHES (downstream traffic)
-    for s in range(NCore):
+    for s in range(len(CORE_DEVICES)):
         sw = CORE_DEVICES[s]
 
         offset = 0
@@ -112,6 +114,8 @@ if __name__ == "__main__":
         topo = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
         if k==4:
             NAgg_p = [2,2,2,2]
+            NCore_c = [2,2]
         if k==8:
             NAgg_p = [4,4,4,4,4,4,4,4]
-        installDefaultPaths(topo, (k/2)**2, NAgg_p)
+            NCore_c = [4,4,4,4]
+        installDefaultPaths(topo, NCore_c, NAgg_p)

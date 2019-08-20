@@ -5,6 +5,7 @@ from datetime import datetime
 import time
 import math
 import sys
+import numpy as np
 
 from monitoringTools import *
 from topoDiscovery import *
@@ -23,7 +24,8 @@ def getFlowStat(topo, r):
     listLAgg_down_p = [] # Number of down links required to suport the down-traffic (where the pod number p is the list index)
     listLAgg_up_p = [] # Number of down links required to suport the up-traffic (where the pod number p is the list index)
     NAgg_p = [] # Minimum number of active aggregation switches required to support traffic in the pod (where the pod number p is the list index)
-    
+    matrixLAgg_up_p_c = np.zeros((k,density)) # 
+    matrixLAgg_down_p_c = np.zeros((k,density))
     allFlowStat = getAllFlowStat() # Get snapshot of the current traffic in the network
 
     for p in range(0,k): # For each pod
@@ -62,55 +64,65 @@ def getFlowStat(topo, r):
         print("\n[POD" + str(p+1) + "] " + "Minimum number of aggregation switches (to satisfy UP traffic) = " + str(NAgg_up_p))
 
         
-        LAgg_up_p = 0.0
-        LAgg_down_p = 0.0
+        
         for j in range(0,density): # For each aggregation switch in the pod p 
             rateUP = []
             rateDOWN = []
             for i in range(0, density): # For each core switch connected to the aggregation switch Aj of the pod p
                 x = density*p+j
                 aggrSwitchID = AGREGATION_DEVICES[x]
-                coreSwitchID = CORE_DEVICES[(x%density)*density +i]                
+                coreSwitchID = CORE_DEVICES[(x%density)*density +i]
+                print(coreSwitchID)                
                 srcPort = topo.linkPorts[aggrSwitchID + "::" + coreSwitchID].split("::")[0] 
                 destPort = topo.linkPorts[aggrSwitchID + "::" + coreSwitchID].split("::")[1] 
-
+                print(srcPort)
                 flowStatUP = getFlowStatLink(allFlowStat, aggrSwitchID, srcPort) 
                 flowStatDOWN = getFlowStatLink(allFlowStat, coreSwitchID, destPort) 
 
                 rateUP_i = flowStatUP["rate"] # Rate between aggregation switch Aj of the pod p in the up direction and Ci 
                 rateUP.append(rateUP_i)
-
+                print((rateUP_i)*(8e-9)*2)
                 rateDOWN_i = flowStatDOWN["rate"] # Rate between aggregation switch Aj of the pod p in the down direction and Ci 
                 rateDOWN.append(rateDOWN_i)
+
                 if flowStatUP["valid"]==False:
                     print("ERROR flowStatUP A-C")
                 if flowStatDOWN["valid"]==False:
                     print("ERROR flowStatDOWN A-C")
+            print(sum(rateUP)*(8e-9)*2)
+            matrixLAgg_up_p_c[p][j] = int(math.ceil(sum(rateUP)*(8e-9)*2/r)) # Total rate up in Gbits/sec
+            matrixLAgg_down_p_c[p][j] = int(math.ceil(sum(rateDOWN)*(8e-9)*2/r)) # Total rate down in Gbits/sec
 
-            LAgg_up_p = LAgg_up_p + sum(rateUP)*(8e-9)*2/r # Total rate up in Gbits/sec
-            LAgg_down_p = LAgg_down_p + sum(rateDOWN)*(8e-9)*2/r # Total rate down in Gbits/sec
-
-        listLAgg_up_p.append(int(math.ceil(LAgg_up_p)))
-        LAgg_p = max(math.ceil(LAgg_up_p),math.ceil(LAgg_down_p),1) 
-        NAgg_down_p = math.ceil(LAgg_down_p/(k/2))
+        # listLAgg_up_p.append(int(math.ceil(LAgg_up_p)))
+        # LAgg_p = max(math.ceil(LAgg_up_p),math.ceil(LAgg_down_p),1) 
+        NAgg_down_p = math.ceil(sum(matrixLAgg_down_p_c[p,:])/(k/2))
         NAgg_p.append(int(max(NAgg_up_p,NAgg_down_p,1)))
 
         # print("Number of links needs between aggregation swicthes of the pod " + str(p+1) + " and the core layer")
-        print("LAgg_up_p = " + str(LAgg_up_p) + " Gbits/sec")
-        print("LAgg_down_p = " + str(LAgg_down_p) + " Gbits/sec")
+        # print("LAgg_up_p = " + str(LAgg_up_p) + " Gbits/sec")
+        # print("LAgg_down_p = " + str(LAgg_down_p) + " Gbits/sec")
         # print("LAgg_p = " + str(LAgg_p) + " (1 Gbits/sec links)")
         # print("******************************NEXT POD********************************************")
     
-    NCore = max(listLAgg_up_p) # Minimum of core switches to satisfy the demand 
+    # Minimum of core switches to satisfy the demand  in each core group
+    print(matrixLAgg_up_p_c)
+    print(matrixLAgg_down_p_c)
+    NCore_c = np.max(matrixLAgg_up_p_c, axis=0) # Maxiumum of each column of the matrix 
+    NCore_c = NCore_c.astype(int)
+
+    if NCore_c[0]==0:
+        NCore_c[0]=1 # MSPT
 
     # To avoid error because stats are wrong
-    if(NCore > k):
-        NCore = k
+    for NCore in NCore_c:
+        if(NCore > k):
+            NCore = k
 
     print("\nNAgg_p = " + str(NAgg_p))
-    print("Ncore = " + str(NCore))
+    print("Ncore_c = ")
+    print(NCore_c)
 
-    return [NCore, NAgg_p]
+    return NCore_c, NAgg_p
 
 
 if __name__ == "__main__":
@@ -124,7 +136,7 @@ if __name__ == "__main__":
             from deviceList.deviceList_k8 import *
 
         topo = TopoManager(k)
-        [NCore, NAgg_p] = getFlowStat(topo, 1)
+        [NCore_c, NAgg_p] = getFlowStat(topo, 1)
 
     #print(json.dumps(r, indent=4, sort_keys=True))
     '''

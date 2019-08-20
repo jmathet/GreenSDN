@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     # time.sleep(5)
 
-    # while(1):
+    while(1):
         # topo = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
         # [NCore, NAgg_p] = getFlowStat(topo, 1.0)
         # if (previousNCore>NCore or previousNAgg_p>NAgg_p):
@@ -61,8 +61,9 @@ if __name__ == "__main__":
         #     time.sleep(1)
         # installDefaultPaths(topo, NCore, NAgg_p)
 
-        # time.sleep(10) # Wait 10 sec
+        NCore_c, NAgg_p = getFlowStat(topo, 0.8)
+        installDefaultPaths(topo, NCore_c, NAgg_p)
+        time.sleep(30) # Wait 30 sec
 
 
-    [NCore, NAgg_p] = getFlowStat(topo, 1.0)
-    installDefaultPaths(topo, NCore, NAgg_p)
+        
