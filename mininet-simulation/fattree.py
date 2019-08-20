@@ -128,30 +128,32 @@ def runMyNetwork(k):
     # Set hosts IP addresses.
     setHostIp(net, mytopo)
     # Ping all
-    # net.pingAll()
-    # generateTraffic(net,mytopo)
+    net.pingAll()
+    time.sleep(5)
+    generateTraffic(net,mytopo)
     # CLI running
-    CLI(net)
+    #CLI(net)
     net.stop()
     
-# def generateTraffic(net, topo):
+def generateTraffic(net, topo):
 
-#     for bandwidth in range(50,1000, 100):
-#         print(bandwidth)
-#         for h in range(topo.iHost//2):
-#             src = net.hosts[h]
-#             dst = net.hosts[2*h +1]
+    for bandwidth in range(50,1000, 100):
+        print(bandwidth)
+        for h in range(topo.iHost//2):
+            src = net.hosts[h]
+            dst = net.hosts[2*h +1]
+            print(src.IP())
+            print(dst.IP())
+            # Create the server command
+            serverCmd = "iperf -s -u &"
 
-#             # Create the server command
-#             serverCmd = "iperf -s -u &"
+            # Create the client command 
+            clientCmd = "iperf -c " + str(dst.IP()) + " -u -b " + str(bandwidth) + "m -t 30 &"
 
-#             # Create the client command 
-#             clientCmd = "iperf -c " + dst.IP() + " -u -b " + str(bandwidth) + "m -t 10 &"
-
-#             # Send commands
-#             dst.cmd(serverCmd)
-#             src.cmd(clientCmd)
-#         time.sleep(10)
+            # Send commands
+            dst.cmd(serverCmd)
+            src.cmd(clientCmd)
+        time.sleep(33)
 
 if __name__ == '__main__':
     # Tell mininet to print useful information
