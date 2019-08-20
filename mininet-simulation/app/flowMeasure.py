@@ -27,6 +27,7 @@ def getFlowStat(topo, r):
     allFlowStat = getAllFlowStat() # Get snapshot of the current traffic in the network
 
     for p in range(0,k): # For each pod
+        print("*******************************")
         listLEdge_up_p_e = [] # Number of links for edge swicth e in pod p (where 2*p+e is the list index)
         for j in range(0,density): # For each edge switch in the pod p 
             rateUP = []
@@ -43,9 +44,9 @@ def getFlowStat(topo, r):
                 rateDOWN_i = flowStatDOWN["rate"] # Rate between edge Ej and aggreation Ai of the pod p in the down direction 
                 rateDOWN.append(rateDOWN_i)
                 if flowStatUP["valid"]==False:
-                    print("ERROR")
+                    print("ERROR flowStatUP E-A")
                 if flowStatDOWN["valid"]==False:
-                    print("ERROR")
+                    print("ERROR flowStatDOWN E-A")
                     
             print(sum(rateUP)*(8e-9)*2)
             LEdge_up_p_e = math.ceil(sum(rateUP)*(8e-9)*2/r) # Total rate up in Gbits/sec 
@@ -82,11 +83,9 @@ def getFlowStat(topo, r):
                 rateDOWN_i = flowStatDOWN["rate"] # Rate between aggregation switch Aj of the pod p in the down direction and Ci 
                 rateDOWN.append(rateDOWN_i)
                 if flowStatUP["valid"]==False:
-                    print("ERROR")
-                # print(rateDOWN_i*(8e-9)*2)
+                    print("ERROR flowStatUP A-C")
                 if flowStatDOWN["valid"]==False:
-                    print("ERROR")
-                # print(rateUP_i*(8e-9)*2)
+                    print("ERROR flowStatDOWN A-C")
 
             LAgg_up_p = LAgg_up_p + sum(rateUP)*(8e-9)*2/r # Total rate up in Gbits/sec
             LAgg_down_p = LAgg_down_p + sum(rateDOWN)*(8e-9)*2/r # Total rate down in Gbits/sec
