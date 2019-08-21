@@ -120,19 +120,23 @@ def setHostIp(net, topo):
 topos = { 'fattree' : ( lambda k : FatTree(k)) }
 
 
-def runMyNetwork(k):
+def runMyNetwork(k, traffic):
     "Create Fat Tree network"
     mytopo = FatTree(k)
     net = Mininet(topo=mytopo, link = TCLink, controller=RemoteController( 'c0', ip='130.194.73.219')) #TODO : mettre le bon controleur
     net.start()
     # Set hosts IP addresses.
     setHostIp(net, mytopo)
-    # Ping all
-    net.pingAll()
-    time.sleep(5)
-    generateTraffic(net,mytopo)
-    # CLI running
-    #CLI(net)
+    print(traffic)
+    if (traffic == "traffic"):
+        # Ping all
+        net.pingAll()
+        time.sleep(5)
+        # Traffic generation
+        generateTraffic(net,mytopo)
+    else:
+        # CLI running
+        CLI(net)
     net.stop()
     
 def generateTraffic(net, topo):
@@ -158,7 +162,7 @@ def generateTraffic(net, topo):
 if __name__ == '__main__':
     # Tell mininet to print useful information
     setLogLevel('info')
-    if (len(sys.argv) != 2):
-        print("Usage : sudo python fattree.py k")
+    if (len(sys.argv) != 3):
+        print("Usage : sudo python fattree.py k traffic/notraffic")
     else: 
-        runMyNetwork(int(sys.argv[1]))
+        runMyNetwork(int(sys.argv[1]), sys.argv[2])
