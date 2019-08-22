@@ -97,11 +97,9 @@ def deleteAllFlowRule(deviceID):
     flowList = getJsonData(url)
     # Removal of each flow (one by one) 
     for flow in flowList["flows"]:
-        print(flow["id"])
-        url = FLOWS_URL + "/" + deviceID + "/" + flow["id"]
-        r = delJsonData(url)
-        print(url)
-    return r
+        if (flow["appId"] == "org.onosproject.rest"):
+            url = FLOWS_URL + "/" + deviceID + "/" + flow["id"]
+            r = delJsonData(url)
 
 def removeLinksOfDevice(position, layer):
     # layer is 1 for the CORE switches, 2 for the AGGREGATION swicthes and 3 for the EDGE switches

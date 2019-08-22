@@ -20,6 +20,8 @@ def installDefaultPaths(topo, NCore_c, NAgg_p):
     for s in range(len(EDGE_DEVICES)):
         edgeSwitchNbinPod = ((s) % density) +1
         sw = EDGE_DEVICES[s]
+        deleteAllFlowRule(sw)
+
         podNb = int(math.ceil((s+1)/float(density)))
         subsubNet = "10." + str(podNb) + "." + str(edgeSwitchNbinPod) + "."
 
@@ -47,6 +49,7 @@ def installDefaultPaths(topo, NCore_c, NAgg_p):
     c = 0
     for s in range(len(AGREGATION_DEVICES)):
         sw = AGREGATION_DEVICES[s]
+        deleteAllFlowRule(sw)
         podNb = int(math.ceil((s+1)/float(density)))
         if (NAgg_p[podNb-1]==0): # If there is no more switch to update
             if (c < len(CORE_DEVICES)-density): 
@@ -83,6 +86,7 @@ def installDefaultPaths(topo, NCore_c, NAgg_p):
     # CORE LAYER SWITCHES (downstream traffic)
     for s in range(len(CORE_DEVICES)):
         sw = CORE_DEVICES[s]
+        deleteAllFlowRule(sw)
 
         offset = 0
         if (s >= k/2):
