@@ -24,8 +24,8 @@ def getFlowStat(topo, r):
     listLAgg_down_p = [] # Number of down links required to suport the down-traffic (where the pod number p is the list index)
     listLAgg_up_p = [] # Number of down links required to suport the up-traffic (where the pod number p is the list index)
     NAgg_p = [] # Minimum number of active aggregation switches required to support traffic in the pod (where the pod number p is the list index)
-    matrixLAgg_up_p_c = np.zeros((k,density)) # 
-    matrixLAgg_down_p_c = np.zeros((k,density))
+    matrixLAgg_up_p_c = np.zeros((k,density)) # Matrix of the number of links reauired to support the up-traffic between aggregation layer of the pod p and the core switch group c
+    matrixLAgg_down_p_c = np.zeros((k,density)) # Matrix of the number of links reauired to support the down-traffic between aggregation layer of the pod p and the core switch group c
     allFlowStat = getAllFlowStat() # Get snapshot of the current traffic in the network
 
     for p in range(0,k): # For each pod
@@ -50,8 +50,8 @@ def getFlowStat(topo, r):
                 rateDOWN.append(rateDOWN_i)
 
                 
-                print("flowStatUP   E-A = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
-                print("flowStatDOWN E-A = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
+                # print("flowStatUP   E-A = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
+                # print("flowStatDOWN E-A = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
                     
             LEdge_up_p_e = math.ceil(sum(rateUP)*(8e-9)*2/r) # Total rate up in Gbits/sec 
             LEdge_down_p_e = math.ceil(sum(rateDOWN)*(8e-9)*2/r) # Total rate down in Gbits/sec
@@ -62,7 +62,9 @@ def getFlowStat(topo, r):
             # print("LEdge_up_p_e = " + str(LEdge_up_p_e) + " Gbits/sec")
             # print("LEdge_down_p_e = " + str(LEdge_down_p_e) + " Gbits/sec")
             # print("LEdge_p_e = " + str(LEdge_p_e) + " (1 Gbits/sec links)")
+
         NAgg_up_p = max(listLEdge_up_p_e)
+        
         print("\n[POD" + str(p+1) + "] " + "Minimum number of aggregation switches (to satisfy UP traffic) = " + str(NAgg_up_p))
 
         LAgg_up_p = 0.0
@@ -80,16 +82,12 @@ def getFlowStat(topo, r):
 
                 flowStatUP = getFlowStatLink(allFlowStat, aggrSwitchID, srcPort) 
                 flowStatDOWN = getFlowStatLink(allFlowStat, coreSwitchID, destPort) 
-                print(aggrSwitchID)
-                print(srcPort)
-                print(coreSwitchID)
-                print(destPort)
+
                 rateUP_i = flowStatUP["rate"] # Rate between aggregation switch Aj of the pod p in the up direction and Ci 
                 rateUP.append(rateUP_i)
                 
-                print("flowStatUP   A-C = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
-                print("flowStatDOWN A-C = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
-
+                # print("flowStatUP   A-C = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
+                # print("flowStatDOWN A-C = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
 
                 rateDOWN_i = flowStatDOWN["rate"] # Rate between aggregation switch Aj of the pod p in the down direction and Ci 
                 rateDOWN.append(rateDOWN_i)
@@ -128,17 +126,17 @@ def getFlowStat(topo, r):
             NCore = k
 
     print("\nNAgg_p = " + str(NAgg_p))
-    print("Ncore_c = ")
-    print(NCore_c)
+    print("Ncore_c = " + str(NCore_c))
 
-    f = open('text.out', 'wb')
-    f.write("Ncore_c\n")
-    for i in range(len(NCore_c)):
-        f.write("%i\n" % (NCore_c[i]))
-    f.write("Nagg_p\n")
-    for i in range(len(NAgg_p)):
-        f.write("%i\n" % (NAgg_p[i]))
-    f.close()
+    # Save data
+    # f = open('text.out', 'wb')
+    # f.write("Ncore_c\n")
+    # for i in range(len(NCore_c)):
+    #     f.write("%i\n" % (NCore_c[i]))
+    # f.write("Nagg_p\n")
+    # for i in range(len(NAgg_p)):
+    #     f.write("%i\n" % (NAgg_p[i]))
+    # f.close()
 
 
     return NCore_c, NAgg_p

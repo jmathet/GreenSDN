@@ -140,7 +140,7 @@ def runMyNetwork(k, traffic):
     net.stop()
     
 def generateTraffic(net, topo):
-
+# Uniform traffic generator
     for bandwidth in range(50,1000, 100):
         print(bandwidth)
         for h in range(topo.iHost//2):

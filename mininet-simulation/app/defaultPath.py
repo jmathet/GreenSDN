@@ -33,14 +33,16 @@ def installDefaultPaths(topo, NCore_c, NAgg_p):
             postFlowRule_dstIP_outPort(sw, str(hostIP), str(outPort), DownPriority)
 
             # Upstream Traffic
-            host = subsubNet + str(h)
+            host = subsubNet + str(h) # Host IP
+
             if (h > NAgg_p[podNb-1]):
-                offset = NAgg_p[podNb-1]
+                offset = NAgg_p[podNb-1] # Find the available aggregation switch in the pod for up-traffic
             else:
                 offset = h
+
             aggrSwitchID = AGREGATION_DEVICES[(podNb-1)*density + offset-1] 
             outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0] 
-            hostIP = host + "/32"
+            hostIP = host + "/32" # Host IP + netmask
             postFlowRule_srcIP_outPort(sw, hostIP, outPort, UpPriority)
             #print(str(sw) + " - " + hostIP + " >>> " + str(aggrSwitchID))
     print(">> EDGE LAYER : down and up traffic OK")
@@ -51,6 +53,7 @@ def installDefaultPaths(topo, NCore_c, NAgg_p):
         sw = AGREGATION_DEVICES[s]
         deleteAllFlowRule(sw)
         podNb = int(math.ceil((s+1)/float(density)))
+
         if (NAgg_p[podNb-1]==0): # If there is no more switch to update
             if (c < len(CORE_DEVICES)-density): 
                 c += density
@@ -95,7 +98,6 @@ def installDefaultPaths(topo, NCore_c, NAgg_p):
             offset = 2
         if (s >= 3*k/2):
             offset = 3
-        # print(str(s) + " - " + str(offset))
         for pod in range(1, k+1):
             subNet = "10." + str(pod) + ".0.0/16"
             aggrSwitchID = AGREGATION_DEVICES[(pod-1)*density + offset] # Aggr swicth connected to the current pod
@@ -116,10 +118,12 @@ if __name__ == "__main__":
             from deviceList.deviceList_k8 import *
             
         topo = TopoManager(k, CORE_DEVICES, AGREGATION_DEVICES, EDGE_DEVICES)
+        
         if k==4:
             NAgg_p = [2,2,2,2]
             NCore_c = [2,2]
         if k==8:
             NAgg_p = [4,4,4,4,4,4,4,4]
             NCore_c = [4,4,4,4]
+
         installDefaultPaths(topo, NCore_c, NAgg_p)

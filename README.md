@@ -72,7 +72,7 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
 
     ``` 
     ~$ cd GreenSDN/mininet/ 
-    ~/GreenSDN/mininet$ sudo python fattree.py <k>
+    ~/GreenSDN/mininet$ sudo python fattree.py <k> {traffic|notraffic}
     mininet> pingall
      ```
 
@@ -86,6 +86,12 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
     ```  
     ~$ cd GreenSDN/app_elastic_tree/ 
     python defaultpath.py <k>
+    ```
+
+6. Run ElasticTree algo
+    ```  
+    ~$ cd GreenSDN/app_elastic_tree/ 
+    python runElasticTree.py <k>
     ```
 ### Pi simulation
 
