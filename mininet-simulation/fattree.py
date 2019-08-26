@@ -131,7 +131,7 @@ def runMyNetwork(k, traffic):
     if (traffic == "traffic"):
         # Ping all
         net.pingAll()
-        time.sleep(5)
+        time.sleep(10)
         # Traffic generation
         generateTraffic(net,mytopo)
     else:
@@ -141,23 +141,20 @@ def runMyNetwork(k, traffic):
     
 def generateTraffic(net, topo):
 # Uniform traffic generator
-    for bandwidth in range(50,1000, 100):
+    print("\n TRAFFIC GENERATOR \n")
+    for bandwidth in range(100,1000, 100):
         print(bandwidth)
         for h in range(topo.iHost//2):
-            src = net.hosts[h]
             dst = net.hosts[2*h +1]
-            print(src.IP())
-            print(dst.IP())
-            # Create the server command
+            # Create the server command and sends it
             serverCmd = "iperf -s -u &"
-
-            # Create the client command 
-            clientCmd = "iperf -c " + str(dst.IP()) + " -u -b " + str(bandwidth) + "m -t 30 &"
-
-            # Send commands
             dst.cmd(serverCmd)
+            src = net.hosts[h]
+            print(str(src.IP()) + " >> " + str(dst.IP()))
+            # Create the client command and sends it
+            clientCmd = "iperf -c " + str(dst.IP()) + " -u -b " + str(bandwidth) + "m -t 120 &"
             src.cmd(clientCmd)
-        time.sleep(33)
+        time.sleep(120)
 
 if __name__ == '__main__':
     # Tell mininet to print useful information

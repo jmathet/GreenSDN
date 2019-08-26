@@ -49,6 +49,12 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
     *   request
     *   json
 
+# Clone the repository
+
+```
+~$ git clone https://github.com/disnetlab/GreenSDN.git
+```
+
 # Run the appliction
 
 ### Mininet simulation
@@ -71,7 +77,7 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
 3. Create network (mininet) 4 or 8 degree (```k```)
 
     ``` 
-    ~$ cd GreenSDN/mininet/ 
+    ~$ cd GreenSDN/mininet-simulation/ 
     ~/GreenSDN/mininet$ sudo python fattree.py <k> {traffic|notraffic}
     mininet> pingall
      ```
@@ -84,7 +90,7 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
 
 5. Create default path
     ```  
-    ~$ cd GreenSDN/app_elastic_tree/ 
+    ~$ cd GreenSDN/mininet-simulation/app/ 
     python defaultpath.py <k>
     ```
 

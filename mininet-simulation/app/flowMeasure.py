@@ -50,8 +50,8 @@ def getFlowStat(topo, r):
                 rateDOWN.append(rateDOWN_i)
 
                 
-                # print("flowStatUP   E-A = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
-                # print("flowStatDOWN E-A = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
+                print("flowStatUP   E-A = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
+                print("flowStatDOWN E-A = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
                     
             LEdge_up_p_e = math.ceil(sum(rateUP)*(8e-9)*2/r) # Total rate up in Gbits/sec 
             LEdge_down_p_e = math.ceil(sum(rateDOWN)*(8e-9)*2/r) # Total rate down in Gbits/sec
@@ -86,8 +86,8 @@ def getFlowStat(topo, r):
                 rateUP_i = flowStatUP["rate"] # Rate between aggregation switch Aj of the pod p in the up direction and Ci 
                 rateUP.append(rateUP_i)
                 
-                # print("flowStatUP   A-C = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
-                # print("flowStatDOWN A-C = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
+                print("flowStatUP   A-C = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
+                print("flowStatDOWN A-C = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
 
                 rateDOWN_i = flowStatDOWN["rate"] # Rate between aggregation switch Aj of the pod p in the down direction and Ci 
                 rateDOWN.append(rateDOWN_i)

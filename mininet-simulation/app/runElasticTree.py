@@ -32,6 +32,9 @@ if __name__ == "__main__":
         NCore_c, NAgg_p = getFlowStat(topo, 1)
         installDefaultPaths(topo, NCore_c, NAgg_p)
 
+        
+        
+        
         time.sleep(30) # Wait 30 sec
 
 
