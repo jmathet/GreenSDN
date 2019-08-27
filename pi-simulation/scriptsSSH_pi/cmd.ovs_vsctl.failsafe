@@ -1,1 +1,0 @@
-'sudo ovs-vsctl set-fail-mode ovsbr0 secure'

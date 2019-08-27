@@ -1,6 +1,0 @@
-#!/bin/bash
-
-for ip in `seq 2 9`; do
-    ssh "root@192.168.99.$ip" "ip addr add 192.168.0.$ip/24 dev br-eno2"
-    ssh "root@192.168.99.$ip" "ip link set dev br-eno2 up"
-done

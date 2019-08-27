@@ -49,6 +49,7 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
     *   request
     *   json
 
+Command: ```~$ pip install package```
 # Clone the repository
 
 ```
@@ -57,20 +58,39 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
 
 # Run the appliction
 
-### Mininet simulation
+1. Run ONOS controller and check default application
 
-1. Run ONOS controller
-
+    Run:
     ``` 
     ~$ cd onos
     ~/onos$ bazel run onos-local -- clean debugm
      ```
+    Check apps:
+    ```
+    ~/onos$ ./tools/test/bin/onos localhost
+    onosCLI@root > apps -a -s
+    *   9 org.onosproject.hostprovider         2.2.0.SNAPSHOT Host Location Provider
+    *  16 org.onosproject.optical-model        2.2.0.SNAPSHOT Optical Network Model
+    *  38 org.onosproject.drivers              2.2.0.SNAPSHOT Default Drivers
+    *  65 org.onosproject.lldpprovider         2.2.0.SNAPSHOT LLDP Link Provider
+    *  66 org.onosproject.openflow-base        2.2.0.SNAPSHOT OpenFlow Base Provider
+    *  67 org.onosproject.openflow             2.2.0.SNAPSHOT OpenFlow Provider Suite
+    *  94 org.onosproject.gui2                 2.2.0.SNAPSHOT ONOS GUI2
+    ```
+    If the list is not like this one, please add missing app with the following command:
+    ```
+    app activate <app name>
+    ```
+
+
+### Mininet simulation
+
 
 2. Run CLI and activate some onos application
     ``` 
     ~/onos$ ./tools/test/bin/onos localhost
-    onos > app activate proxyarp 
-    onos > app activate fwd
+    onosCLI@root > app activate proxyarp 
+    onosCLI@root > app activate fwd
     ``` 
     (proxyarp : for default path algo, fwd : for the host discovery - will be deactivated later)
 
@@ -78,35 +98,34 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
 
     ``` 
     ~$ cd GreenSDN/mininet-simulation/ 
-    ~/GreenSDN/mininet$ sudo python fattree.py <k> {traffic|notraffic}
-    mininet> pingall
+    ~/GreenSDN/mininet-simulation$ sudo python fattree.py <k> <traffic|notraffic>
+    mininet > pingall
      ```
 
-4. Deactivate forwarding ONOS app
+     Example (4-fat-tree and no traffic generated) : 
+     ```
+     ~/GreenSDN/mininet-simulation$ sudo python fattree.py 4 notraffic
+     ```
+
+4. Deactivate forwarding ONOS app using ONOS CLI
 
     ``` 
-    onos> app deactivate fwd 
+    onosCLI@root > app deactivate fwd 
     ```
 
 5. Create default path
     ```  
     ~$ cd GreenSDN/mininet-simulation/app/ 
-    python defaultpath.py <k>
+    ~/GreenSDN/mininet-simulation/app$ python defaultpath.py <k>
     ```
 
 6. Run ElasticTree algo
     ```  
-    ~$ cd GreenSDN/app_elastic_tree/ 
+    ~$ cd GreenSDN/mininet-simulation/app/
     python runElasticTree.py <k>
     ```
 ### Pi simulation
 
-1. Run ONOS controller
-
-    ``` 
-    ~$ cd onos
-    ~/onos$ bazel run onos-local -- clean debugm
-     ```
 
 2. Run CLI and activate some onos application
     ``` 
@@ -115,6 +134,17 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
     ``` 
 <span style="color:red">/!\ WARNING </span> Without ```proxyarp``` default paths are not working
 
+3. Create default path
+    ```  
+    ~$ cd GreenSDN/pi-simulation/app/ 
+    ~/GreenSDN/pi-simulation/app$ python defaultpath.py <k>
+    ```
+
+4. Run ElasticTree algo
+    ```  
+    ~$ cd GreenSDN/pi-simulation/app/
+    python runElasticTree.py <k>
+    ```
 
 # Network topology
 
@@ -122,7 +152,7 @@ Fat-tree topology
 
 ## Network IP adresses
 IP networks in a ```k=4``` fat-tree topology.
-The idea is the following : to create different sub-network depinding the position in the fat-tree topology. We decided to use ```10.0.0.0/8``` as network address. Then, each POD sub-network is identify throught the 8 following bits. The POD p is using the ```10.p.0.0/16``` network IP address. The next 8 bits are used to specify the number of the edge switch in the current POD, the IP address of this sub-network is : ```10.p.e.0/24```. Finally, the last 8 bits are used by the number of the host connected to the edge switch e: ```10.p.e.h/24```
+The idea is the following : to create different sub-network depinding the position in the fat-tree topology. We decided to use ```10.0.0.0/8``` as network address. Then, each POD sub-network is identify throught the 8 following bits. The POD p is using the ```10.p.0.0/16``` network IP address. The next 8 bits are used to specify the number of the edge switch in the current POD, the IP address of this sub-network is : ```10.p.e.0/24```. Finally, the last 8 bits are used by the number of the host connected to the edge switch e: ```10.p.e.h```
 
 <img src="figures/network_GRAPH_16HOSTS(IP).png"
      alt="Markdown png"
@@ -134,3 +164,11 @@ The idea is the following : to create different sub-network depinding the positi
 
 
 <span style="color:red">/!\ WARNING </span> Higher priority (high number) matches FIRST
+
+## Network Pi-tower
+<img src="figures/archi-cables-pi-fattree.png"
+     alt="Markdown png"
+     style="float: left; margin: 20px;"/>
+<img src="figures/archi-cables-tower.png"
+     alt="Markdown png"
+     style="float: left; margin: 20px;" />
