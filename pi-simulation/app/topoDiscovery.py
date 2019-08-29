@@ -60,6 +60,8 @@ class TopoManager(object):
         for host in reply['hosts']:
             self.G.add_node(host['id'], type='host')
             for location in host['locations']:
+                if(host['ipAddresses']==[]):
+                    continue # Avoid error with no IP hosts
                 self.G.add_edge(host['id'], location['elementId'],  **{'bandwidth': DEFAULT_ACCESS_CAPACITY})
                 ip = host['ipAddresses'][0]
                 switchId = location['elementId'] # Get swictth connected

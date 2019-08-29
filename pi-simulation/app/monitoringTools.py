@@ -72,6 +72,7 @@ def postFlowRule_dstIP_outPort(deviceID, destIP, outPort, priority):
     flowRule["flows"][0]["selector"]["criteria"][0]["type"] = "IPV4_DST"
     
     r = postJsonData(FLOWS_URL, flowRule)
+    print(r)
     return r
 
    # Post flow rule for internet access
@@ -107,8 +108,6 @@ def deleteAllFlowRule(deviceID):
     flowList = getJsonData(url)
     # Removal of each flow (one by one) 
     for flow in flowList["flows"]:
-        print(flow["id"])
         url = FLOWS_URL + "/" + deviceID + "/" + flow["id"]
         r = delJsonData(url)
-        print(url)
     return r

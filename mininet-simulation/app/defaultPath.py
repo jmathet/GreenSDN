@@ -86,7 +86,7 @@ def installDefaultPaths(topo, NCore_c, NAgg_p):
             c = 0
     print(">> AGGREAGTION LAYER : down and up traffic OK")
 
-    # CORE LAYER SWITCHES (downstream traffic)
+    # CORE LAYER SWITCHES (down traffic)
     for s in range(len(CORE_DEVICES)):
         sw = CORE_DEVICES[s]
         deleteAllFlowRule(sw)
