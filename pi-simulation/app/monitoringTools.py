@@ -72,7 +72,6 @@ def postFlowRule_dstIP_outPort(deviceID, destIP, outPort, priority):
     flowRule["flows"][0]["selector"]["criteria"][0]["type"] = "IPV4_DST"
     
     r = postJsonData(FLOWS_URL, flowRule)
-    print(r)
     return r
 
    # Post flow rule for internet access

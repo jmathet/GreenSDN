@@ -24,12 +24,15 @@ def getFlowStat(topo, r):
     matrixLAgg_down_p_c = np.zeros((k,density)) # Matrix of the number of links reauired to support the down-traffic between aggregation layer of the pod p and the core switch group c
     allFlowStat = getAllFlowStat() # Get snapshot of the current traffic in the network
 
-    for p in range(0,k): # For each pod
+    for p in range(0,k/2): # For each pod (half fat-tree => only 2 pods)
         listLEdge_up_p_e = [] # Number of links for edge swicth e in pod p (where 2*p+e is the list index)
         for j in range(0,density): # For each edge switch in the pod p 
             rateUP = []
             rateDOWN = []
             for i in range(0, density): # For each aggregation switch connected to the edge switch Ej in the pod p
+                print("POD = "+str(p))
+                print("j = " + str(j))
+                print(density*p+j)
                 edgeSitchID = EDGE_DEVICES[density*p+j]
                 aggrSwitchID = AGREGATION_DEVICES[density*p +i]
 
@@ -68,10 +71,11 @@ def getFlowStat(topo, r):
         for j in range(0,density): # For each aggregation switch in the pod p 
             rateUP = []
             rateDOWN = []
-            for i in range(0, density): # For each core switch connected to the aggregation switch Aj of the pod p
+            for i in range(0, 1): # For each core switch connected to the aggregation switch Aj of the pod p
                 x = density*p+j
                 aggrSwitchID = AGREGATION_DEVICES[x]
-                coreSwitchID = CORE_DEVICES[(x%density)*density +i]
+                print(x%density)
+                coreSwitchID = CORE_DEVICES[x%density]
 
                 srcPort = topo.linkPorts[aggrSwitchID + "::" + coreSwitchID].split("::")[0] 
                 destPort = topo.linkPorts[aggrSwitchID + "::" + coreSwitchID].split("::")[1] 

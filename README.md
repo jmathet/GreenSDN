@@ -82,10 +82,6 @@ Command: ```~$ pip install package```
     app activate <app name>
     ```
 
-
-### Mininet simulation
-
-
 2. Run CLI and activate some onos application
     ``` 
     ~/onos$ ./tools/test/bin/onos localhost
@@ -94,7 +90,11 @@ Command: ```~$ pip install package```
     ``` 
     (proxyarp : for default path algo, fwd : for the host discovery - will be deactivated later)
 
-3. Create network (mininet) 4 or 8 degree (```k```)
+<span style="color:red">/!\ WARNING </span> Without ```proxyarp``` default paths are not working
+### Mininet simulation
+
+
+3. Create network (mininet) 4 or 8 degree (```k```) and pingall
 
     ``` 
     ~$ cd GreenSDN/mininet-simulation/ 
@@ -125,25 +125,27 @@ Command: ```~$ pip install package```
     python runElasticTree.py <k>
     ```
 ### Pi simulation
+3. Pingall from the computer 1
+    ```  
+    root@compute1~$ ./pingall
+    ```
 
+4. Deactivate forwarding ONOS app using ONOS CLI
 
-2. Run CLI and activate some onos application
     ``` 
-    ~/onos$ ./tools/test/bin/onos localhost
-    onos > app activate proxyarp 
-    ``` 
-<span style="color:red">/!\ WARNING </span> Without ```proxyarp``` default paths are not working
+    onosCLI@root > app deactivate fwd 
+    ```
 
-3. Create default path
+5. Create default path
     ```  
     ~$ cd GreenSDN/pi-simulation/app/ 
     ~/GreenSDN/pi-simulation/app$ python defaultpath.py <k>
     ```
 
-4. Run ElasticTree algo
+6. Run ElasticTree algo
     ```  
     ~$ cd GreenSDN/pi-simulation/app/
-    python runElasticTree.py <k>
+    python runElasticTree.py
     ```
 
 # Network topology

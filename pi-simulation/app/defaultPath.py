@@ -15,10 +15,9 @@ def installDefaultPaths(topo, NCore, NAgg_p):
 
     # EDGE LAYER SWITCHES
     for s in range(len(EDGE_DEVICES)):
-        print(s)
         edgeSwitchNbinPod = ((s) % density) +1
         sw = EDGE_DEVICES[s]
-        deleteAllFlowRule(sw)
+        # deleteAllFlowRule(sw)
 
         podNb = int(math.ceil((s+1)/float(density)))
         subsubNet = "10." + str(podNb) + "." + str(edgeSwitchNbinPod) + "."
@@ -26,7 +25,6 @@ def installDefaultPaths(topo, NCore, NAgg_p):
         edgeDensity = HOST_IN_EDGE_DENSITY[s] # Number of hosts connected to the edge swicth s
         #for h in range(1, density+1):
         for h in range(1, edgeDensity+1):
-            print(s)
             # Downstream traffic
             host = subsubNet + str(h)
             outPort = topo.hostLocation[host].split("::")[1]
@@ -51,7 +49,7 @@ def installDefaultPaths(topo, NCore, NAgg_p):
     c = 0
     for s in range(len(AGREGATION_DEVICES)):
         sw = AGREGATION_DEVICES[s]
-        deleteAllFlowRule(sw)
+        # deleteAllFlowRule(sw)
         podNb = int(math.ceil((s+1)/float(density)))
 
         if (NAgg_p[podNb-1]==0): # If there is no more switch to update
@@ -89,7 +87,7 @@ def installDefaultPaths(topo, NCore, NAgg_p):
     # CORE LAYER SWITCHES (down traffic)
     for s in range(len(CORE_DEVICES)):
         sw = CORE_DEVICES[s]
-        deleteAllFlowRule(sw)
+        # deleteAllFlowRule(sw)
 
         offset = 0
         if (s == 1):
@@ -101,10 +99,10 @@ def installDefaultPaths(topo, NCore, NAgg_p):
             postFlowRule_dstIP_outPort(sw, str(subNet), str(outPort), DownPriority)
 
         # Up traffic (internet)
-        ip = "10.0.0." + str(s+1)
-        outPort = topo.hostLocation[ip].split("::")[1]
-        postFlowRule_dstIP_outPort(sw, ip + "/32", str(outPort), UpPriority)
-        postFlowRule_internet(sw, str(outPort))
+        # ip = "10.0.0." + str(s+1)
+        # outPort = topo.hostLocation[ip].split("::")[1]
+        # postFlowRule_dstIP_outPort(sw, ip + "/32", str(outPort), UpPriority)
+        # postFlowRule_internet(sw, str(outPort))
     print(">> CORE LAYER : down traffic OK")
 
 if __name__ == "__main__":

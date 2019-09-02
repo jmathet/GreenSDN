@@ -24,4 +24,4 @@ if __name__ == "__main__":
         installDefaultPaths(topo, NCore, NAgg_p)
 
 
-        time.sleep(10) # Wait 10 sec
+        time.sleep(30) # Wait 30 sec
