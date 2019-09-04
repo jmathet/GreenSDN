@@ -123,7 +123,7 @@ topos = { 'fattree' : ( lambda k : FatTree(k)) }
 def runMyNetwork(k, traffic):
     "Create Fat Tree network"
     mytopo = FatTree(k)
-    net = Mininet(topo=mytopo, link = TCLink, controller=RemoteController( 'c0', ip='130.194.73.219')) #TODO : mettre le bon controleur
+    net = Mininet(topo=mytopo, link = TCLink, controller=RemoteController( 'c0', ip='127.0.0.1')) #TODO : mettre le bon controleur
     net.start()
     # Set hosts IP addresses.
     setHostIp(net, mytopo)
