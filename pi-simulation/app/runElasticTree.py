@@ -4,6 +4,7 @@ from topoDiscovery import *
 from defaultPath import *
 from flowMeasure import *
 from deviceList.deviceList_Pi import *
+from powerControl import *
 
 import time
 
@@ -19,9 +20,11 @@ if __name__ == "__main__":
     time.sleep(5)
 
     while(1):
-        topo = TopoManager(k)
         [NCore, NAgg_p] = getFlowStat(topo, 1)
+        powerControl(NCore, NAgg_p)
+        time.sleep(30) # Wait 10 sec
         installDefaultPaths(topo, NCore, NAgg_p)
 
+        
 
-        time.sleep(30) # Wait 30 sec
+        time.sleep(30) # Wait 20 sec

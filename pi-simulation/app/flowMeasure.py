@@ -25,14 +25,12 @@ def getFlowStat(topo, r):
     allFlowStat = getAllFlowStat() # Get snapshot of the current traffic in the network
 
     for p in range(0,k/2): # For each pod (half fat-tree => only 2 pods)
+        print("\n[POD" + str(p+1) + "] ")
         listLEdge_up_p_e = [] # Number of links for edge swicth e in pod p (where 2*p+e is the list index)
         for j in range(0,density): # For each edge switch in the pod p 
             rateUP = []
             rateDOWN = []
             for i in range(0, density): # For each aggregation switch connected to the edge switch Ej in the pod p
-                print("POD = "+str(p))
-                print("j = " + str(j))
-                print(density*p+j)
                 edgeSitchID = EDGE_DEVICES[density*p+j]
                 aggrSwitchID = AGREGATION_DEVICES[density*p +i]
 
@@ -41,30 +39,32 @@ def getFlowStat(topo, r):
 
                 flowStatUP = getFlowStatLink(allFlowStat, edgeSitchID, srcPort) 
                 flowStatDOWN = getFlowStatLink(allFlowStat, aggrSwitchID, destPort)
+                if 'rate' in flowStatUP:
+                    rateUP_i = flowStatUP["rate"] # Rate between edge Ej and aggreation Ai of the pod p in the up direction
+                    rateUP.append(rateUP_i)
+                    print("flowStatUP   E-A = " + str(rateUP_i*(8e-6)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
 
-                rateUP_i = flowStatUP["rate"] # Rate between edge Ej and aggreation Ai of the pod p in the up direction
-                rateUP.append(rateUP_i)
-
-                rateDOWN_i = flowStatDOWN["rate"] # Rate between edge Ej and aggreation Ai of the pod p in the down direction 
-                rateDOWN.append(rateDOWN_i)
+                if 'rate' in flowStatDOWN:
+                    rateDOWN_i = flowStatDOWN["rate"] # Rate between edge Ej and aggreation Ai of the pod p in the down direction 
+                    rateDOWN.append(rateDOWN_i)
+                    print("flowStatDOWN E-A = " + str(rateDOWN_i*(8e-6)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
 
                 
-                print("flowStatUP   E-A = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
-                print("flowStatDOWN E-A = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
+                
                     
-            LEdge_up_p_e = math.ceil(sum(rateUP)*(8e-9)*2/r) # Total rate up in Gbits/sec 
-            LEdge_down_p_e = math.ceil(sum(rateDOWN)*(8e-9)*2/r) # Total rate down in Gbits/sec
+            LEdge_up_p_e = math.ceil(sum(rateUP)*(8e-6)*2/300/r) # Total rate up in Mbits/sec /300 
+            LEdge_down_p_e = math.ceil(sum(rateDOWN)*(8e-6)*2/300/r) # Total rate down in Mbits/sec /300
             listLEdge_up_p_e.append(LEdge_up_p_e)
 
             LEdge_p_e = max(LEdge_up_p_e,LEdge_down_p_e,1)
             # print("Number of links needs between the edge swicth " + str(density*p+j +1) + " and the aggregation layer")
-            # print("LEdge_up_p_e = " + str(LEdge_up_p_e) + " Gbits/sec")
-            # print("LEdge_down_p_e = " + str(LEdge_down_p_e) + " Gbits/sec")
-            # print("LEdge_p_e = " + str(LEdge_p_e) + " (1 Gbits/sec links)")
+            # print("LEdge_up_p_e = " + str(LEdge_up_p_e) + " * 300 Mbits/sec")
+            # print("LEdge_down_p_e = " + str(LEdge_down_p_e) + " * 300 Mbits/sec")
+            # print("LEdge_p_e = " + str(LEdge_p_e) + " (300 Mbits/sec links)")
 
         NAgg_up_p = max(listLEdge_up_p_e)
         
-        print("\n[POD" + str(p+1) + "] " + "Minimum number of aggregation switches (to satisfy UP traffic) = " + str(NAgg_up_p))
+        print("Minimum number of aggregation switches (to satisfy UP traffic) = " + str(NAgg_up_p))
 
         LAgg_up_p = 0.0
 
@@ -74,7 +74,6 @@ def getFlowStat(topo, r):
             for i in range(0, 1): # For each core switch connected to the aggregation switch Aj of the pod p
                 x = density*p+j
                 aggrSwitchID = AGREGATION_DEVICES[x]
-                print(x%density)
                 coreSwitchID = CORE_DEVICES[x%density]
 
                 srcPort = topo.linkPorts[aggrSwitchID + "::" + coreSwitchID].split("::")[0] 
@@ -83,24 +82,27 @@ def getFlowStat(topo, r):
                 flowStatUP = getFlowStatLink(allFlowStat, aggrSwitchID, srcPort) 
                 flowStatDOWN = getFlowStatLink(allFlowStat, coreSwitchID, destPort) 
 
-                rateUP_i = flowStatUP["rate"] # Rate between aggregation switch Aj of the pod p in the up direction and Ci 
-                rateUP.append(rateUP_i)
+                if 'rate' in flowStatUP:
+                    rateUP_i = flowStatUP["rate"] # Rate between aggregation switch Aj of the pod p in the up direction and Ci 
+                    rateUP.append(rateUP_i)
+                    print("flowStatUP   A-C = " + str(rateUP_i*(8e-6)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
+
                 
-                print("flowStatUP   A-C = " + str(rateUP_i*(8e-9)*2) + " " + str(flowStatUP["valid"]) + " " + str(flowStatUP["time"]))
-                print("flowStatDOWN A-C = " + str(rateDOWN_i*(8e-9)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
 
-                rateDOWN_i = flowStatDOWN["rate"] # Rate between aggregation switch Aj of the pod p in the down direction and Ci 
-                rateDOWN.append(rateDOWN_i)
-
+                if 'rate' in flowStatUP:
+                    rateDOWN_i = flowStatDOWN["rate"] # Rate between aggregation switch Aj of the pod p in the down direction and Ci 
+                    rateDOWN.append(rateDOWN_i)
+                    print("flowStatDOWN A-C = " + str(rateDOWN_i*(8e-6)*2) + " " + str(flowStatDOWN["valid"]) + " " + str(flowStatDOWN["time"]))
+                    
                 # if flowStatUP["valid"]==False:
                 #     print("ERROR flowStatUP A-C")
                 # if flowStatDOWN["valid"]==False:
                 #     print("ERROR flowStatDOWN A-C")
 
-            LAgg_up_p = LAgg_up_p + sum(rateUP)*(8e-9)*2 # Total rate up in Gbits/sec
+            LAgg_up_p = LAgg_up_p + sum(rateUP)*(8e-6)*2 # Total rate up in Mbits/sec
             
-            matrixLAgg_up_p_c[p][j] = int(math.ceil(sum(rateUP)*(8e-9)*2/r)) # Total rate up in Gbits/sec
-            matrixLAgg_down_p_c[p][j] = int(math.ceil(sum(rateDOWN)*(8e-9)*2/r)) # Total rate down in Gbits/sec
+            matrixLAgg_up_p_c[p][j] = int(math.ceil(sum(rateUP)*(8e-6)*2/300/r)) # Total rate up 
+            matrixLAgg_down_p_c[p][j] = int(math.ceil(sum(rateDOWN)*(8e-6)*2/300/r)) # Total rate down
 
         # listLAgg_up_p.append(int(math.ceil(LAgg_up_p)))
         # LAgg_p = max(math.ceil(LAgg_up_p),math.ceil(LAgg_down_p),1) 
@@ -108,9 +110,9 @@ def getFlowStat(topo, r):
         NAgg_p.append(int(max(NAgg_up_p,NAgg_down_p,1)))
 
         # print("Number of links needs between aggregation swicthes of the pod " + str(p+1) + " and the core layer")
-        print("LAgg_up_p = " + str(LAgg_up_p) + " Gbits/sec")
-        # print("LAgg_down_p = " + str(LAgg_down_p) + " Gbits/sec")
-        # print("LAgg_p = " + str(LAgg_p) + " (1 Gbits/sec links)")
+        print("LAgg_up_p = " + str(LAgg_up_p) + " Mbits/sec")
+        # print("LAgg_down_p = " + str(LAgg_down_p) + " Mbits/sec")
+        # print("LAgg_p = " + str(LAgg_p) + " (1 Mbits/sec links)")
         # print("******************************NEXT POD********************************************")
     
     # Minimum of core switches to satisfy the demand  in each core group
