@@ -52,15 +52,15 @@ def getFlowStat(topo, r):
                 
                 
                     
-            LEdge_up_p_e = math.ceil(sum(rateUP)*(8e-6)*2/300/r) # Total rate up in Mbits/sec /300 
-            LEdge_down_p_e = math.ceil(sum(rateDOWN)*(8e-6)*2/300/r) # Total rate down in Mbits/sec /300
+            LEdge_up_p_e = math.ceil(sum(rateUP)*(8e-6)*2/75/r) # Total rate up in Mbits/sec /75 
+            LEdge_down_p_e = math.ceil(sum(rateDOWN)*(8e-6)*2/75/r) # Total rate down in Mbits/sec /75
             listLEdge_up_p_e.append(LEdge_up_p_e)
 
             LEdge_p_e = max(LEdge_up_p_e,LEdge_down_p_e,1)
             # print("Number of links needs between the edge swicth " + str(density*p+j +1) + " and the aggregation layer")
-            # print("LEdge_up_p_e = " + str(LEdge_up_p_e) + " * 300 Mbits/sec")
-            # print("LEdge_down_p_e = " + str(LEdge_down_p_e) + " * 300 Mbits/sec")
-            # print("LEdge_p_e = " + str(LEdge_p_e) + " (300 Mbits/sec links)")
+            # print("LEdge_up_p_e = " + str(LEdge_up_p_e) + " * 75 Mbits/sec")
+            # print("LEdge_down_p_e = " + str(LEdge_down_p_e) + " * 75 Mbits/sec")
+            # print("LEdge_p_e = " + str(LEdge_p_e) + " (75 Mbits/sec links)")
 
         NAgg_up_p = max(listLEdge_up_p_e)
         
@@ -101,12 +101,12 @@ def getFlowStat(topo, r):
 
             LAgg_up_p = LAgg_up_p + sum(rateUP)*(8e-6)*2 # Total rate up in Mbits/sec
             
-            matrixLAgg_up_p_c[p][j] = int(math.ceil(sum(rateUP)*(8e-6)*2/300/r)) # Total rate up 
-            matrixLAgg_down_p_c[p][j] = int(math.ceil(sum(rateDOWN)*(8e-6)*2/300/r)) # Total rate down
+            matrixLAgg_up_p_c[p][j] = int(math.ceil(sum(rateUP)*(8e-6)*2/75/r)) # Total rate up 
+            matrixLAgg_down_p_c[p][j] = int(math.ceil(sum(rateDOWN)*(8e-6)*2/75/r)) # Total rate down
 
         # listLAgg_up_p.append(int(math.ceil(LAgg_up_p)))
         # LAgg_p = max(math.ceil(LAgg_up_p),math.ceil(LAgg_down_p),1) 
-        NAgg_down_p = math.ceil(sum(matrixLAgg_down_p_c[p,:])/(k/2))
+        NAgg_down_p = math.ceil(sum(matrixLAgg_down_p_c[p,:]))
         NAgg_p.append(int(max(NAgg_up_p,NAgg_down_p,1)))
 
         # print("Number of links needs between aggregation swicthes of the pod " + str(p+1) + " and the core layer")
@@ -115,12 +115,19 @@ def getFlowStat(topo, r):
         # print("LAgg_p = " + str(LAgg_p) + " (1 Mbits/sec links)")
         # print("******************************NEXT POD********************************************")
     
-    # Minimum of core switches to satisfy the demand  in each core group
+    # Minimum of core switches to satisfy the demand  in each core group where the position in the list NCore_c is the core group number
     NCore_c = np.max(matrixLAgg_up_p_c, axis=0) # Maxiumum of each column of the matrix 
     NCore_c = NCore_c.astype(int)
 
     if NCore_c[0]==0:
         NCore_c[0]=1 # MSPT
+
+    if NCore_c[0]==2: # Because having 2 switches in the group 1 is not possible => split into 2 groups
+        NCore_c[0]=1
+        NCore_c[1]=1 
+        NAgg_p[0]=2
+        NAgg_p[1]=2
+    
 
     # To avoid error because stats are wrong
     for NCore in NCore_c:

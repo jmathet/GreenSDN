@@ -15,10 +15,7 @@ def powerControl(NCore, NAgg_p):
             os.system('ssh pi@192.168.0.98 python pi_power_control.py ' + str(coreSwitchPosition[s]) + ' OFF')
     for p in range(2): # For pods 1 and 2
         NAgg = NAgg_p[p]
-        print(p)
         for s in range(2): # For aggregation switch 1 and 2 of the pod p
-            print(s)
-            print(s+p)
             if (s+1 <= NAgg): # Turn ON needed switches
                 os.system('ssh pi@192.168.0.98 python pi_power_control.py ' + str(aggrSwitchPosition[p*2+s]) + ' ON')
             else: # Turn OFF needed switches
