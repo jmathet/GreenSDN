@@ -143,7 +143,7 @@ Command: ```~$ pip install package```
 5. Create default path
     ```  
     ~$ cd GreenSDN/pi-simulation/app/ 
-    ~/GreenSDN/pi-simulation/app$ python defaultpath.py <k>
+    ~/GreenSDN/pi-simulation/app$ python defaultpath.py
     ```
 
 6. Run ElasticTree algo
