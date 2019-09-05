@@ -2,28 +2,32 @@ GreenSDN project : Create a plug and play application implementing ElasticTree
 
 # Reporsitory Organisation
 ### ``` mininet-simulation ``` folder: 
-* ``app`` : external application using the API REST of ONOS. This is the logical module of the ElasticTree application.
-    *   ```topo_discovery.py``` : build graph of the current topology based on ONOS info
-    *   ``` defaultpath.py``` :  create single default path between every host in the network
-    *   ``` flowMeasure.py``` : compute the number of switches needed in each layer in order to satisfy traffic and save energy
+* *app* : external application using the API REST of ONOS. This is the logical module of the ElasticTree application.
+    *   ```topo_discovery.py``` : to build graph of the current topology based on ONOS info
+    *   ``` defaultpath.py``` : to create single default path between every host in the network
+    *   ``` flowMeasure.py``` : to compute the number of switches needed in each layer in order to satisfy traffic and save energy
     *   ``` monitoringTools.py ``` : basic functions
     *   ``` runElasticTree.py ``` : main function (deamon)
-    *   ``` deviceList ``` : folder to store the list of devices for 4 and 4 degree fattre
-    *   ``` ruleTempalte ```: folder to store json template of flow rules
+    *   *deviceList* : folder to store the list of devices for 4 and 4 degree fattre
+    *   *ruleTempalte*: folder to store json template of flow rules
 
 * ``fattree.py`` : Python file to create virtual  SDN network connected to ONOS controller (fat-tree topology) using mininet. The topology is k-fattree (4 or 8 degree)
 
 ### ``` Pi-simulation``` folder:
-* ``app`` : external application using the API REST of ONOS. This is the logical module of the ElasticTree application.
-    *   ```topo_discovery.py``` : build graph of the current topology based on ONOS info
-    *   ``` defaultpath.py``` :  create single default path between every host in the network
-    *   ``` flowMeasure.py``` : compute the number of switches needed in each layer in order to satisfy traffic and save energy
+* *app* : external application using the API REST of ONOS. This is the logical module of the ElasticTree application.
+    *   ```topo_discovery.py``` : to build graph of the current topology based on ONOS info
+    *   ``` defaultpath.py``` :  to create single default path between every host in the network
+    *   ``` flowMeasure.py``` : to compute the number of switches needed in each layer in order to satisfy traffic and save energy
     *   ``` monitoringTools.py ``` : basic functions
+    *   ``` powerControl.py ``` : to monitor the power of Raspberry-Pis switches according to the number of switches needed
     *   ``` runElasticTree.py ``` : main function (deamon)
-    *   ``` deviceList ``` : folder to store the list of devices for our special fattre
-    *   ``` ruleTempalte ```: folder to store json template of flow rules
+    *   *deviceList* : folder to store the list of devices for our special fattre
+    *   *ruleTempalte*: folder to store json template of flow rules
 
-* ```scriptsSSH_pi ``` : scripts to simplify the management of Raspberry-pi
+* *scriptsSSH_pi* : scripts to simplify the management of Raspberry-pi
+    *   ``` pi_power_control.py ```: pyhton script used in the power manager Raspberry-Pi to control the relay using GPIO
+    *   ``` power_measure.py ```: to read the power consumed by the tower of Raspberry-Pis through ePDUs
+    *   ```  runall_background ```: to send a bash command to every Raspberry-Pi (list stored in ```list.switch```) using ssh
 
 
 
