@@ -17,13 +17,13 @@ def installDefaultPaths(topo, NCore, NAgg_p):
     for s in range(len(EDGE_DEVICES)):
         edgeSwitchNbinPod = ((s) % density) +1
         sw = EDGE_DEVICES[s]
-        # deleteAllFlowRule(sw)
+
 
         podNb = int(math.ceil((s+1)/float(density)))
         subsubNet = "10." + str(podNb) + "." + str(edgeSwitchNbinPod) + "."
 
         edgeDensity = HOST_IN_EDGE_DENSITY[s] # Number of hosts connected to the edge swicth s
-        #for h in range(1, density+1):
+
         for h in range(1, edgeDensity+1):
             # Downstream traffic
             host = subsubNet + str(h)
@@ -49,7 +49,7 @@ def installDefaultPaths(topo, NCore, NAgg_p):
     c = 0
     for s in range(len(AGREGATION_DEVICES)):
         sw = AGREGATION_DEVICES[s]
-        # deleteAllFlowRule(sw)
+
         podNb = int(math.ceil((s+1)/float(density)))
 
         if (NAgg_p[podNb-1]==0): # If there is no more switch to update
@@ -87,18 +87,18 @@ def installDefaultPaths(topo, NCore, NAgg_p):
     # CORE LAYER SWITCHES (down traffic)
     for s in range(len(CORE_DEVICES)):
         sw = CORE_DEVICES[s]
-        # deleteAllFlowRule(sw)
 
         offset = 0
         if (s == 1):
             offset = 1
+
         for pod in range(1, k/2 +1):
             subNet = "10." + str(pod) + ".0.0/16"
             aggrSwitchID = AGREGATION_DEVICES[(pod-1)*density + offset] # Aggr swicth connected to the current pod
             outPort = topo.linkPorts[sw + "::" + aggrSwitchID].split("::")[0]
             postFlowRule_dstIP_outPort(sw, str(subNet), str(outPort), DownPriority)
 
-        # Up traffic (internet)
+        # Up traffic (internet) = add gateway
         # ip = "10.0.0." + str(s+1)
         # outPort = topo.hostLocation[ip].split("::")[1]
         # postFlowRule_dstIP_outPort(sw, ip + "/32", str(outPort), UpPriority)
